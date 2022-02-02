@@ -1,5 +1,6 @@
 package simulator.model;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,6 +29,7 @@ public abstract class Road extends SimulatedObject{
 		this.length = length;
 		this.weather = weather;
 		this.contLimit = contLimit;	
+		vehicles = new ArrayList<>();
 	}
 
 	void enter(Vehicle v) {
