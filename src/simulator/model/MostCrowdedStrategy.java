@@ -14,11 +14,24 @@ public class MostCrowdedStrategy implements LightSwitchingStrategy{
 		if(roads.isEmpty())
 			return -1;
 		if(currGreen == -1)
-			return -2; //TODO
+			return largestQueue(qs, 0); //TODO magic number
 		if(currTime - lastSwitchingTime < _timeSlot)
 			return currGreen;
-		
-		return 0; //TODO wtf es eso
+		return largestQueue(qs, currGreen +1); 
+	}
+	
+	private int largestQueue(List<List<Vehicle>> qs, int iniPos) {
+		int max = qs.get(0).size();
+		int look;
+		for(int i = 1; i < qs.size(); i++) {
+			look = (iniPos + i) % qs.size();
+			if(qs.get(look).size() < max)
+				max = qs.get(look).size();
+		}		 
+		return max;		
 	}
 
 }
+
+
+

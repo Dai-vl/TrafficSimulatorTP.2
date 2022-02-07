@@ -32,9 +32,9 @@ public abstract class Road extends SimulatedObject{
 		vehicles = new ArrayList<>();
 	}
 
-	void enter(Vehicle v) {
+	void enter(Vehicle v) throws IllegalArgumentException{
 		if(v.getSpeed() == 0 && v.getLocation() == 0) vehicles.add(v);
-		else throw new IllegalArgumentException("Invalid Vehicle"); //la he cambiado a esta
+		else throw new IllegalArgumentException("Invalid Vehicle"); 
 	}
 	
 	void exit(Vehicle v) {

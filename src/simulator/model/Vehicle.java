@@ -18,6 +18,7 @@ public class Vehicle extends SimulatedObject{
 	private int contClass; // entre 0 y 10
 	private int contTotal; // cont total vehiculo
 	private int disTotal;
+	private int junctionInd; // indice del ultimo cruce en el itinerario que haya usado
 	
 	Vehicle(String id, int maxSpeed, int contClass, List<Junction> itinerary) throws IllegalArgumentException{
 		super(id);
@@ -27,6 +28,8 @@ public class Vehicle extends SimulatedObject{
 		this.contClass = contClass;
 		this.itinerary = Collections.unmodifiableList(new ArrayList<>(itinerary)); 
 		this.disTotal = 0;
+		this.status = VehicleStatus.PENDING;
+		this.junctionInd = 0;
 	}
 	
 	int min(int x, int y) {
@@ -45,36 +48,48 @@ public class Vehicle extends SimulatedObject{
 		else throw new IllegalArgumentException("ERROR!");
 	}
 	
-	void moveToNextRoad() {
-		//metodo DE CLASE ROAD para entrar y salir
-		//preguntar cruce en el que esta esperando DE CLASE JUNCTION
-	/*	if(!VehicleStatus.PENDING.equals(status) || !VehicleStatus.WAITING.equals(status)) 
-			throw new 
-		*/
+	void moveToNextRoad()  throws IllegalArgumentException{
+		if(!VehicleStatus.PENDING.equals(status) && !VehicleStatus.WAITING.equals(status)) 
+			throw new IllegalArgumentException("moveToNextRoad: Vehicle");
+		
+		if(!VehicleStatus.PENDING.equals(status))
+			road.exit(this);
+		
+		try {
+			if(junctionInd < itinerary.size()-1) {
+				road = 	itinerary.get(junctionInd).roadTo(itinerary.get(junctionInd + 1));		
+				road.enter(this);
+				junctionInd++;
+				status = VehicleStatus.TRAVELING;
+			}
+			else 
+				status = VehicleStatus.ARRIVED;
+		}
+		catch(IllegalArgumentException ie) {
+			System.out.println(ie.getMessage());
+		}
 	}
 	
-	@Override
 	void advance(int time) {
 		int locIni = location;
 		int adv = 0;
+		int c;
 		
 		if(status.equals(VehicleStatus.TRAVELING)) {
 			location = min(location + actSpeed, road.getLength());
-			adv = location - locIni;
-			disTotal += adv;
-			contTotal += adv * contClass; //he cambiado esto, inicializar a 0
+			adv = location - locIni; disTotal += adv;
+			c = adv * contClass; 
+			contTotal += c; road.addContamination(c);
 			if(location >= road.getLength()) {
-				//funcion anadir a cola de junction con metodo de la clase
-				// en la primera no sale de ninguna y en el ultimo no entra
-				// no olvidar cambiar estado vehiculo
+				road.getDest().enter(this); //TODO asi o con itinerary / try?
+				status = VehicleStatus.WAITING;
 			}
 		}
 		else {
-			this.setSpeed(0);
+			this.setSpeed(0); //TODO try
 		}
 	}
 
-	@Override
 	public JSONObject report() {
 		JSONObject jo1 = new JSONObject();
 
