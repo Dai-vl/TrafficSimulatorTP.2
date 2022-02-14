@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class RoadMap {
 	
 	private List<Junction> junctions;
@@ -28,27 +31,40 @@ public class RoadMap {
 			if(juncMap.containsKey(j._id))
 				throw new IllegalArgumentException("Not valid junction: in addJunction (ID)");
 		junctions.add(j);
-		//TODO modificar mapa
+		//TODO modificar mapa es asi????
+		juncMap.put(j._id, j);
 	}
 	
 	void addRoad(Road r) {
 			if(roadMap.containsKey(r._id)) 
 				throw new IllegalArgumentException("Not valid junction: in addRoad (ID)");
 			//TODO comprobar cruces conectan carreteras existen en el mapa
+			if(!juncMap.containsValue(r.getSrc())) {
+				throw new IllegalArgumentException("Not valid junction: in addRoad (cruce conecta carretera)");
+				//TODO comprobar cruce conecta carretera existe en el mapa creo q no es asi 
+			}
 		roads.add(r);
-		//TODO modificar mapa
+		//TODO modificar mapa es asi????
+		roadMap.put(r._id, r);
 	}
 	
 	void addVehicle(Vehicle v) {
 			if(vehicleMap.containsKey(v._id)) 
 				throw new IllegalArgumentException("Not valid junction: in addVehicle (ID)");
 			//TODO existen carreteras que conecten los cruces consecutivos de su itinerario
+			for(Junction q: v.getItinerary()) {
+				if(!juncMap.containsKey(q.getId())) {
+					throw new IllegalArgumentException("Not valid junction: in addRoad (cruce conecta carreteraa)");
+					//TODO sigo pensando q no es asi :(
+				}
+			}
 		vehicles.add(v);
-		//TODO modificar mapa
+		//TODO modificar mapa es asi????
+		vehicleMap.put(v._id, v);
 	}
 	
 	public Junction getJunction(String id) {
-		return juncMap.get(id);
+		return juncMap.get(id); // la propia funcion devuelve null si no existe
 	}
 	
 	public Road getRoad(String id) {
@@ -78,5 +94,29 @@ public class RoadMap {
 		juncMap.clear();
 		roadMap.clear();
 		vehicleMap.clear();
+	}
+	
+	public JSONObject report() {
+		JSONObject jo1 = new JSONObject();
+		JSONArray ja = new JSONArray();
+		for(Junction q: junctions) {
+			ja.put(q);
+		}		
+		jo1.put("junctions", ja);
+		
+		JSONArray je = new JSONArray();
+		for(Road q: roads) {
+			je.put(q);
+		}		
+		jo1.put("road", je);
+		
+		JSONArray ji = new JSONArray();
+		for(Vehicle q: vehicles) {
+			ji.put(q);
+		}
+		//TODO hacer con ja je ji o podria optimizarse?
+		jo1.put("vehicles", ji);
+		
+		return jo1;
 	}
 }
