@@ -1,7 +1,6 @@
 package simulator.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -26,17 +25,13 @@ public class Junction extends SimulatedObject{
 		super(id);
 		
 		if(lsStrategy == null || dqStrategy == null || xCoor < 0 || yCoor < 0) {
-			throw new IllegalArgumentException("Constructor Junction no válido"); 
+			throw new IllegalArgumentException("Constructor Junction no vÃ¡lido"); 
 		}
 		this.lsStrategy = lsStrategy;
 		this.dqStrategy = dqStrategy;
 		this.xCoor = xCoor;
 		this.yCoor = yCoor;
-		lastSwitchingTime = 0;
-		incomingRoad = new ArrayList<>();
-		outgoingRoad = new HashMap<>();
-		queue = new ArrayList<>();
-		roadQueue = new HashMap<>();
+		lastSwitchingTime = 0;	
 		//TODO inicializar listas y mapas??
 	}
 
