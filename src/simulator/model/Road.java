@@ -22,7 +22,7 @@ public abstract class Road extends SimulatedObject{
 	Road(String id, Junction srcJunc, Junction destJunc, int maxSpeed, int contLimit, int length, Weather weather) {
 		super(id);
 		if(maxSpeed <= 0 || contLimit < 0 || length <= 0 || srcJunc != null || destJunc != null || weather != null)
-			throw new IllegalArgumentException("Constructor Road no válido"); 
+			throw new IllegalArgumentException("Constructor Road no vÃ¡lido"); 
 		this.srcJunc = srcJunc; 
 		this.destJunc = destJunc;
 		this.maxSpeed = maxSpeed;
@@ -65,7 +65,7 @@ public abstract class Road extends SimulatedObject{
 			v.setSpeed(calculateVehicleSpeed(v));
 			v.advance(time);
 		}
-		//TODO Recuerda ordenar la lista de vehículos por su localización al final del método
+		//TODO Recuerda ordenar la lista de vehÃ­culos por su localizaciÃ³n al final del mÃ©todo
 	}
 
 	public JSONObject report() {
@@ -73,7 +73,7 @@ public abstract class Road extends SimulatedObject{
 
 		jo1.put("id", this.getId());
 		jo1.put("speedlimit", actLimSpeed);
-		jo1.put("weather", weather);
+		jo1.put("weather", weather.toString());
 		jo1.put("co2", conTotal);
 		JSONArray ja = new JSONArray();
 		for(Vehicle v: vehicles) {

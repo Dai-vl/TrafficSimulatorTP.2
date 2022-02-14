@@ -1,10 +1,12 @@
 package simulator.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Junction extends SimulatedObject{
@@ -31,6 +33,11 @@ public class Junction extends SimulatedObject{
 		this.xCoor = xCoor;
 		this.yCoor = yCoor;
 		lastSwitchingTime = 0;
+		incomingRoad = new ArrayList<>();
+		outgoingRoad = new HashMap<>();
+		queue = new ArrayList<>();
+		roadQueue = new HashMap<>();
+		//TODO inicializar listas y mapas??
 	}
 
 	void addIncommingRoad(Road r) throws IllegalArgumentException{
@@ -66,11 +73,9 @@ public class Junction extends SimulatedObject{
 	void advance(int time) {
 		List<Vehicle> movingVehicles = new ArrayList<>();
 		for(int i = 0; i < queue.size(); i++) {
-			dqStrategy.dequeue(queue.get(i));
+			dqStrategy.dequeue(queue.get(i)); // aqui cual esta usando la moveFirst??
 			//TODO
 		}
-			
-
 		
 		int nextRoad = lsStrategy.chooseNextGreen(incomingRoad, queue, currGreen, lastSwitchingTime, time);
 		if(nextRoad != currGreen) {
@@ -80,7 +85,17 @@ public class Junction extends SimulatedObject{
 	}
 
 	public JSONObject report() {
-		return null;
+		JSONObject jo1 = new JSONObject();
+
+		jo1.put("id", this.getId());
+		jo1.put("green", currGreen);
+		JSONArray ja = new JSONArray();
+		for(List<Vehicle> q: queue) {
+			ja.put(q);
+		}
+		jo1.put("queues", ja);
+		
+		return jo1;
 	}
 
 }
