@@ -11,8 +11,9 @@ public class NewInterCityRoadEvent extends Event{
 	private Weather weather;
 	
 	public NewInterCityRoadEvent(int time, String id, String srcJun, String
-			destJunc, int length, int co2Limit, int maxSpeed, Weather weather)
-			{
+			destJunc, int length, int co2Limit, int maxSpeed, Weather weather) 
+	{ // TODO he cambiado el orden para que coinicda con el de road
+
 			super(time);
 			this.id = id;
 			this.srcJun = srcJun;
@@ -21,7 +22,7 @@ public class NewInterCityRoadEvent extends Event{
 			this.co2Limit = co2Limit;
 			this.maxSpeed = maxSpeed;
 			this.weather = weather;
-			}
+	}
 	
 	@Override
 	void execute(RoadMap map) {

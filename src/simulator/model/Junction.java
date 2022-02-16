@@ -90,8 +90,10 @@ public class Junction extends SimulatedObject{
 		jo1.put("id", this.getId());
 		jo1.put("green", currGreen);
 		JSONArray ja = new JSONArray();
-		for(List<Vehicle> q: queue) {
-			ja.put(q);
+		for(List<Vehicle> q: queue) { //TODO esto es asi???
+			for(int i = 0; i < q.size(); i++) {
+				ja.put(q.get(i).report());	
+			}
 		}
 		jo1.put("queues", ja);
 		
