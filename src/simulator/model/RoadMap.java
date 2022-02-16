@@ -18,7 +18,7 @@ public class RoadMap {
 	private Map<String,Road> roadMap;
 	private Map<String,Vehicle> vehicleMap;
 	
-	RoadMap(){
+	RoadMap(){ //TODO package protected?
 		junctions = new ArrayList<>();
 		roads = new ArrayList<>();
 		vehicles = new ArrayList<>();
@@ -28,43 +28,46 @@ public class RoadMap {
 	}
 	
 	void addJunction(Junction j) {
-			if(juncMap.containsKey(j._id))
-				throw new IllegalArgumentException("Not valid junction: in addJunction (ID)");
+		if(juncMap.containsKey(j._id))
+			throw new IllegalArgumentException("Not valid junction: in addJunction (ID)");
 		junctions.add(j);
-		//TODO modificar mapa es asi????
 		juncMap.put(j._id, j);
 	}
 	
 	void addRoad(Road r) {
-			if(roadMap.containsKey(r._id)) 
-				throw new IllegalArgumentException("Not valid junction: in addRoad (ID)");
-			//TODO comprobar cruces conectan carreteras existen en el mapa
-			if(!juncMap.containsValue(r.getSrc())) {
-				throw new IllegalArgumentException("Not valid junction: in addRoad (cruce conecta carretera)");
-				//TODO comprobar cruce conecta carretera existe en el mapa creo q no es asi 
-			}
+		if(roadMap.containsKey(r._id)) 
+			throw new IllegalArgumentException("Not valid junction: in addRoad (ID)");
+
+		if(!juncMap.containsValue(r.getSrc()) || !juncMap.containsValue(r.getDest())) 			//TODO D: lo he cambiado para que compruebe tambien el destino
+			throw new IllegalArgumentException("Not valid junction: in addRoad (cruce conecta carretera)");
+		
 		roads.add(r);
-		//TODO modificar mapa es asi????
 		roadMap.put(r._id, r);
 	}
 	
 	void addVehicle(Vehicle v) {
-			if(vehicleMap.containsKey(v._id)) 
-				throw new IllegalArgumentException("Not valid junction: in addVehicle (ID)");
-			//TODO existen carreteras que conecten los cruces consecutivos de su itinerario
-			for(Junction q: v.getItinerary()) {
-				if(!juncMap.containsKey(q.getId())) {
+		if(vehicleMap.containsKey(v._id)) 
+			throw new IllegalArgumentException("Not valid junction: in addVehicle (ID)");
+		
+		Junction previous = v.getItinerary().get(0);
+		for(Junction current: v.getItinerary()) { //TODO D: He hecho esto no se
+			if(previous != current) {
+				if(previous.roadTo(current) == null)
 					throw new IllegalArgumentException("Not valid junction: in addRoad (cruce conecta carreteraa)");
-					//TODO sigo pensando q no es asi :(
-				}
 			}
+			previous = current;
+			
+		/*	if(!juncMap.containsKey(current.getId())) {
+				throw new IllegalArgumentException("Not valid junction: in addRoad (cruce conecta carreteraa)");
+				//TODO sigo pensando q no es asi :( 
+			}*/
+		}
 		vehicles.add(v);
-		//TODO modificar mapa es asi????
 		vehicleMap.put(v._id, v);
 	}
 	
 	public Junction getJunction(String id) {
-		return juncMap.get(id); // la propia funcion devuelve null si no existe
+		return juncMap.get(id); 
 	}
 	
 	public Road getRoad(String id) {
@@ -87,7 +90,7 @@ public class RoadMap {
 		return Collections.unmodifiableList(vehicles);
 	}
 	
-	void reset() { // me ha dicho el que usemos el clear
+	void reset() { 
 		junctions.clear();
 		vehicles.clear();
 		roads.clear();
@@ -98,6 +101,7 @@ public class RoadMap {
 	
 	public JSONObject report() {
 		JSONObject jo1 = new JSONObject();
+		
 		JSONArray ja = new JSONArray();
 		for(Junction q: junctions) {
 			ja.put(q);
@@ -114,7 +118,7 @@ public class RoadMap {
 		for(Vehicle q: vehicles) {
 			ji.put(q);
 		}
-		//TODO hacer con ja je ji o podria optimizarse?
+		//TODO hacer con ja je ji o podria optimizarse? D: yo creo q es asi 
 		jo1.put("vehicles", ji);
 		
 		return jo1;

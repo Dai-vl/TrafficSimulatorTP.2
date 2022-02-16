@@ -10,15 +10,15 @@ public class SetWeatherEvent extends Event{
 	
 	public SetWeatherEvent(int time, List<Pair<String,Weather>> ws) {
 		super(time);
-		if(ws == null)	throw new IllegalArgumentException("ERROR!");
+		if(ws == null)	throw new IllegalArgumentException("ERROR en SetWeatherEvent constructor: ws es null");
 		this.ws = ws;
 		}
 
 	@Override
 	void execute(RoadMap map) {
-		for( int i = 0; i < ws.size(); i++) {
+		for(Pair<String, Weather> p : ws) {
 			try {
-			map.getRoad(ws.get(i).getFirst()).setWeather(ws.get(i).getSecond());
+				map.getRoad(p.getFirst()).setWeather(p.getSecond());
 			}
 			catch(IllegalArgumentException ie) {
 				System.out.println(ie.getMessage() + " SetWeatherEvent: No Existe Carretera \n");

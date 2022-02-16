@@ -12,7 +12,7 @@ public class NewCityRoadEvent extends Event{
 
 	public NewCityRoadEvent(int time, String id, String srcJun, String
 			destJunc, int length, int co2Limit, int maxSpeed, Weather weather)
-			{
+	{
 			super(time);
 			this.id = id;
 			this.srcJun = srcJun;
@@ -21,12 +21,10 @@ public class NewCityRoadEvent extends Event{
 			this.co2Limit = co2Limit;
 			this.maxSpeed = maxSpeed;
 			this.weather = weather;
-			}
+	}
 
 
-	@Override
 	void execute(RoadMap map) {
-		// TODO Auto-generated method stub
 		try {
 			CityRoad r = new CityRoad(id, map.getJunction(srcJun), map.getJunction(destJunc), maxSpeed, co2Limit, length, weather);
 			map.addRoad(r);

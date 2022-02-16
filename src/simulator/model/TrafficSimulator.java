@@ -9,7 +9,7 @@ import simulator.misc.SortedArrayList;
 
 public class TrafficSimulator {
 	
-	private RoadMap roads;
+	private RoadMap roads; 
 	private List<Event> events;
 	private int time;
 	
@@ -20,7 +20,7 @@ public class TrafficSimulator {
 	}
 	
 	public void addEvent(Event e) {
-		events.add(e); //TODO al ser sortedArrayList ns si esta ya ordenada al añadirse, el comparador del tiempo esta en la clase event
+		events.add(e); 
 	}
 
 	public void advance() {

@@ -8,8 +8,7 @@ public class NewJunctionEvent extends Event{
 	private int xCoor;
 	private int yCoor;
 
-	public NewJunctionEvent(int time, String id, LightSwitchingStrategy
-			lsStrategy, DequeuingStrategy dqStrategy, int xCoor, int yCoor) {
+	public NewJunctionEvent(int time, String id, LightSwitchingStrategy lsStrategy, DequeuingStrategy dqStrategy, int xCoor, int yCoor) {
 			super(time);
 			this.id = id;
 			this.lsStrategy = lsStrategy;
@@ -19,15 +18,14 @@ public class NewJunctionEvent extends Event{
 			}
 
 	@Override
-	void execute(RoadMap map) {
-		Junction junc = new Junction(id, lsStrategy, dqStrategy, xCoor, xCoor);
+	void execute(RoadMap map) {		
 		try {
+			Junction junc = new Junction(id, lsStrategy, dqStrategy, xCoor, xCoor);
 			map.addJunction(junc);
 		}
 		catch(IllegalArgumentException ie) {
 			System.out.println(ie.getMessage() + " NewJunctionEvent: addJunction \n");
 		}
-		
 	}
 
 

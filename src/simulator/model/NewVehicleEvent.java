@@ -11,16 +11,14 @@ public class NewVehicleEvent extends Event{
 	private List<String> itinerary;
 
 	public NewVehicleEvent(int time, String id, int maxSpeed, int contClass, List<String> itinerary) {
-			super(time);
-			this.id = id;
-			this.maxSpeed = maxSpeed;
-			this.contClass = contClass;
-			this.itinerary = new ArrayList<>(itinerary);
-			}
+		super(time);
+		this.id = id;
+		this.maxSpeed = maxSpeed;
+		this.contClass = contClass;
+		this.itinerary = new ArrayList<>(itinerary);
+	}
 
-	@Override
 	void execute(RoadMap map) {
-		
 		try {
 			List<Junction> aux = new ArrayList<>();
 			
@@ -28,7 +26,7 @@ public class NewVehicleEvent extends Event{
 				aux.add(map.getJunction(itinerary.get(i)));
 			}
 			
-			Vehicle v = new Vehicle(id, maxSpeed, contClass, aux); //TODO aux : creo q esto tmp es asi 
+			Vehicle v = new Vehicle(id, maxSpeed, contClass, aux); 
 			v.moveToNextRoad();
 			map.addVehicle(v);
 		}
