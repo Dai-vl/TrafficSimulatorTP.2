@@ -15,19 +15,21 @@ public class Junction extends SimulatedObject{
 	private Map<Junction,Road> outgoingRoad; //cruce al que va, carretera por la que va
 	private List<List<Vehicle>> queue;
 	private Map<Road,List<Vehicle>> roadQueue;
-	private int currGreen;
-	private int lastSwitchingTime;
+	private int currGreen, lastSwitchingTime, xCoor, yCoor;
 	private LightSwitchingStrategy lsStrategy;
 	private DequeuingStrategy dqStrategy;
-	private int xCoor;
-	private int yCoor;
 	
 	Junction(String id, LightSwitchingStrategy lsStrategy, DequeuingStrategy dqStrategy, int xCoor, int yCoor) {	
 		super(id);
+		if(lsStrategy == null) 
+			throw new IllegalArgumentException("Constructor Junction no valido: lsStrategy es null"); 
+		if(dqStrategy == null) 
+			throw new IllegalArgumentException("Constructor Junction no valido: dqStratey es null"); 
+		if( xCoor < 0 )
+			throw new IllegalArgumentException("Constructor Junction no valido: coordenada x negativa"); 
+		if( yCoor < 0 )
+			throw new IllegalArgumentException("Constructor Junction no valido: coordenada y negativa"); 
 		
-		if(lsStrategy == null || dqStrategy == null || xCoor < 0 || yCoor < 0) { //TODO lanzar distintas
-			throw new IllegalArgumentException("Constructor Junction no valido"); 
-		}
 		this.lsStrategy = lsStrategy;
 		this.dqStrategy = dqStrategy;
 		this.xCoor = xCoor;
@@ -58,11 +60,7 @@ public class Junction extends SimulatedObject{
 	}
 	
 	void enter(Vehicle v) {
-		try {
-			v.getRoad().enter(v);
-		} catch(IllegalArgumentException ie) {
-			System.out.println(ie.getMessage() + " Junction: enter \n");
-		}
+		v.getRoad().enter(v);
 	}
 	
 	public Road roadTo(Junction j) {

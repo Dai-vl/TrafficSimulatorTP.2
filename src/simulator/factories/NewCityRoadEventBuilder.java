@@ -1,8 +1,6 @@
 package simulator.factories;
 
 import simulator.model.NewCityRoadEvent;
-import simulator.model.Road;
-import simulator.model.Weather;
 
 public class NewCityRoadEventBuilder extends NewRoadEventBuilder{
 
