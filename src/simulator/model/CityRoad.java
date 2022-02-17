@@ -1,7 +1,7 @@
 package simulator.model;
 
 public class CityRoad extends Road{
-	
+	//prueba git
 	private final int WINDY_STORM = 10;
 	private final int NOT_WINDY_STORM = 2;
 
