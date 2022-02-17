@@ -30,6 +30,6 @@ public abstract class NewRoadEventBuilder extends Builder<Event>{
 		return null;
 	}
 	
-	abstract NewRoadEvent createTheRoad(); //TODO crear NewRoadEvent
+	abstract NewRoadEvent createTheRoad(); 
 
 }
