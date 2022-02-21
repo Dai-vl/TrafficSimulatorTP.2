@@ -2,9 +2,9 @@ package simulator.factories;
 
 import simulator.model.NewInterCityRoadEvent;
 
-public class NewInterCityRoadEventBuilder extends NewRoadEventBuilder{
+public class NewInterCityRoadEventBuilder extends NewRoadEventBuilder {
 
-	public NewInterCityRoadEventBuilder(String type) {
+	public NewInterCityRoadEventBuilder() {
 		super("new_inter_city_road");
 	}
 

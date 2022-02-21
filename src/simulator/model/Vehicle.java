@@ -19,7 +19,8 @@ public class Vehicle extends SimulatedObject {
 	private int disTotal;
 	private int junctionInd; // indice del ultimo cruce en el itinerario que haya usado
 
-	Vehicle(String id, int maxSpeed, int contClass, List<Junction> itinerary) throws IllegalArgumentException {
+	protected Vehicle(String id, int maxSpeed, int contClass, List<Junction> itinerary)
+			throws IllegalArgumentException {
 		super(id);
 		if (maxSpeed <= 0 || contClass < 0 || contClass > 10 || itinerary.size() < 2)
 			throw new IllegalArgumentException("ERROR!");
@@ -38,40 +39,36 @@ public class Vehicle extends SimulatedObject {
 			return y;
 	}
 
-	void setSpeed(int s) throws IllegalArgumentException {
+	protected void setSpeed(int s) throws IllegalArgumentException {
 		if (s < 0)
 			throw new IllegalArgumentException("ERROR!");
 		this.actSpeed = min(s, maxSpeed);
 	}
 
-	void setContaminationClass(int c) throws IllegalArgumentException {
+	protected void setContaminationClass(int c) throws IllegalArgumentException {
 		if (c >= 0 && c <= 10)
 			this.contClass = c;
 		else
 			throw new IllegalArgumentException("ERROR!");
 	}
 
-	void moveToNextRoad() throws IllegalArgumentException {
+	protected void moveToNextRoad() throws IllegalArgumentException {
 		if (!VehicleStatus.PENDING.equals(status) && !VehicleStatus.WAITING.equals(status))
 			throw new IllegalArgumentException("moveToNextRoad: Vehicle");
 
 		if (!VehicleStatus.PENDING.equals(status))
 			road.exit(this);
 
-		try {
-			if (junctionInd < itinerary.size() - 1) {
-				road = itinerary.get(junctionInd).roadTo(itinerary.get(junctionInd + 1));
-				road.enter(this);
-				junctionInd++;
-				status = VehicleStatus.TRAVELING;
-			} else
-				status = VehicleStatus.ARRIVED;
-		} catch (IllegalArgumentException ie) {
-			System.out.println(ie.getMessage());
-		}
+		if (junctionInd < itinerary.size() - 1) {
+			road = itinerary.get(junctionInd).roadTo(itinerary.get(junctionInd + 1));
+			road.enter(this);
+			junctionInd++;
+			status = VehicleStatus.TRAVELING;
+		} else
+			status = VehicleStatus.ARRIVED;
 	}
 
-	void advance(int time) {
+	protected void advance(int time) {
 		int locIni = location;
 		int adv = 0;
 		int c;

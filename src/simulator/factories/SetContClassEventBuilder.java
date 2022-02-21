@@ -10,7 +10,7 @@ import simulator.misc.Pair;
 import simulator.model.Event;
 import simulator.model.NewSetContClassEvent;
 
-public class SetContClassEventBuilder extends Builder<Event>{
+public class SetContClassEventBuilder extends Builder<Event> {
 
 	public SetContClassEventBuilder() {
 		super("set_cont_class");
@@ -19,15 +19,14 @@ public class SetContClassEventBuilder extends Builder<Event>{
 	protected Event createTheInstance(JSONObject data) {
 		int time = data.getInt("time");
 		JSONArray ws = data.getJSONArray("info");
-		List<Pair<String,Integer>> w = new ArrayList<>();
+		List<Pair<String, Integer>> w = new ArrayList<>();
 		JSONObject aux;
-		for(int i = 0; i < ws.length(); i++) {
+		for (int i = 0; i < ws.length(); i++) {
 			aux = ws.getJSONObject(i);
-			w.add(new Pair<String, Integer>(aux.getString("road"), Integer.parseInt(aux.getString("class"))));
+			w.add(new Pair<String, Integer>(aux.getString("vehicle"), aux.getInt("class")));
 		}
-		
+
 		return new NewSetContClassEvent(time, w);
 	}
-	
 
 }

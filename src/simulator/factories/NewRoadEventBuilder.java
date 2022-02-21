@@ -6,13 +6,13 @@ import simulator.model.Event;
 import simulator.model.NewRoadEvent;
 import simulator.model.Weather;
 
-public abstract class NewRoadEventBuilder extends Builder<Event>{
-	//a
+public abstract class NewRoadEventBuilder extends Builder<Event> {
+	// a
 	protected int time;
 	protected String id, srcJun, destJunc;
 	protected int length, co2Limit, maxSpeed;
 	protected Weather weather;
-	
+
 	public NewRoadEventBuilder(String type) {
 		super(type);
 	}
@@ -23,13 +23,13 @@ public abstract class NewRoadEventBuilder extends Builder<Event>{
 		srcJun = data.getString("src");
 		destJunc = data.getString("dest");
 		length = data.getInt("length");
-		co2Limit = data.getInt("co2Limit");
-		maxSpeed = data.getInt("maxSpeed");
+		co2Limit = data.getInt("co2limit");
+		maxSpeed = data.getInt("maxspeed");
 		weather = Weather.valueOf(data.getString("weather"));
-		
-		return null;
+
+		return createTheRoad();
 	}
-	
-	abstract NewRoadEvent createTheRoad(); 
+
+	abstract NewRoadEvent createTheRoad();
 
 }

@@ -19,12 +19,15 @@ public abstract class Road extends SimulatedObject {
 	private int conTotal; // Carretera
 	private List<Vehicle> vehicles; // ordenada por location del vehiculo (descendente)
 
-	Road(String id, Junction srcJunc, Junction destJunc, int maxSpeed, int contLimit, int length, Weather weather) {
+	public Road(String id, Junction srcJunc, Junction destJunc, int maxSpeed, int contLimit, int length,
+			Weather weather) {
 		super(id);
-		if (maxSpeed <= 0 || contLimit < 0 || length <= 0 || srcJunc != null || destJunc != null || weather != null)
+		if (maxSpeed <= 0 || contLimit < 0 || length <= 0 || srcJunc == null || destJunc == null || weather == null)
 			throw new IllegalArgumentException("Constructor Road no válido");
 		this.srcJunc = srcJunc;
+		this.srcJunc.addOutgoingRoad(this);
 		this.destJunc = destJunc;
+		this.destJunc.addIncommingRoad(this);
 		this.maxSpeed = maxSpeed;
 		this.length = length;
 		this.weather = weather;
@@ -32,14 +35,14 @@ public abstract class Road extends SimulatedObject {
 		vehicles = new ArrayList<>();
 	}
 
-	void enter(Vehicle v) throws IllegalArgumentException {
+	public void enter(Vehicle v) throws IllegalArgumentException {
 		if (v.getSpeed() == 0 && v.getLocation() == 0)
 			vehicles.add(v);
 		else
 			throw new IllegalArgumentException("Invalid Vehicle");
 	}
 
-	void exit(Vehicle v) {
+	public void exit(Vehicle v) {
 		vehicles.remove(v);
 	}
 

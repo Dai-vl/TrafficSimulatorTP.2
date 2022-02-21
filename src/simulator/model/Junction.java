@@ -19,7 +19,7 @@ public class Junction extends SimulatedObject {
 	private LightSwitchingStrategy lsStrategy;
 	private DequeuingStrategy dqStrategy;
 
-	Junction(String id, LightSwitchingStrategy lsStrategy, DequeuingStrategy dqStrategy, int xCoor, int yCoor) {
+	public Junction(String id, LightSwitchingStrategy lsStrategy, DequeuingStrategy dqStrategy, int xCoor, int yCoor) {
 		super(id);
 		if (lsStrategy == null)
 			throw new IllegalArgumentException("Constructor Junction no valido: lsStrategy es null");
@@ -41,17 +41,17 @@ public class Junction extends SimulatedObject {
 		roadQueue = new HashMap<>();
 	}
 
-	void addIncommingRoad(Road r) throws IllegalArgumentException {
+	public void addIncommingRoad(Road r) throws IllegalArgumentException {
 		if (!r.getDest().equals(this))
 			throw new IllegalArgumentException("Not valid Road: in addIncommingRoad");
 
 		incomingRoad.add(r);
-		List<Vehicle> auxList = new LinkedList<>(r.getVehicles());
+		List<Vehicle> auxList = new LinkedList<>(r.getVehicles()); // FIXME esto vale null y no se q hacer
 		queue.add(auxList);
 		roadQueue.put(r, auxList);
 	}
 
-	void addOutgoingRoad(Road r) throws IllegalArgumentException {
+	public void addOutgoingRoad(Road r) throws IllegalArgumentException {
 		if (!r.getSrc().equals(this) || outgoingRoad.containsKey(r.getDest()))
 			throw new IllegalArgumentException("Not valid Road: in addOutgoingRoad");
 
