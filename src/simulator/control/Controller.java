@@ -1,7 +1,7 @@
 package simulator.control;
 
 import java.io.IOException;
-import java.io.InputStream; //TODO es esta biblioteca?
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
@@ -23,7 +23,7 @@ public class Controller {
 		if (sim.equals(null))
 			throw new IllegalArgumentException("Traffic Simulator con valor null en controller");
 		if (eventsFactory.equals(null))
-			throw new IllegalArgumentException("Traffic Simulator con valor null en controller");
+			throw new IllegalArgumentException("Events Factory con valor null en controller");
 		ts = sim;
 		ef = eventsFactory;
 	}
@@ -33,7 +33,7 @@ public class Controller {
 	}
 
 	public void loadEvents(InputStream in) throws IOException {
-		JSONObject jo = new JSONObject(new JSONTokener(in));
+		JSONObject jo = new JSONObject(new JSONTokener(in)); // TODO revisar
 
 		if (!jo.has("events"))
 			throw new IllegalArgumentException("Input Stream incorrecto");
@@ -42,7 +42,7 @@ public class Controller {
 
 		for (int i = 0; i < events.length(); i++) {
 			JSONObject e = events.getJSONObject(i);
-			ts.addEvent(ef.createInstance(e)); // TODO por ejemplo
+			ts.addEvent(ef.createInstance(e));
 		}
 
 		// TODO cerrar input?
@@ -61,14 +61,12 @@ public class Controller {
 		PrintStream print = new PrintStream(out);
 		print.println("{");
 		print.println("\" states\" : [");
-		JSONObject currentState = new JSONObject();
 
 		for (int i = 0; i < n; i++) {
 			ts.advance();
-			currentState = ts.report();
-			print.println(currentState);
+			print.println(ts.report());
 			if (i < n - 1)
-				print.print(","); // para que no imprima la ultima coma
+				print.print(",");
 
 		}
 

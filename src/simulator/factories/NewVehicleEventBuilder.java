@@ -9,8 +9,7 @@ import org.json.JSONObject;
 import simulator.model.Event;
 import simulator.model.NewVehicleEvent;
 
-
-public class NewVehicleEventBuilder extends Builder<Event>{
+public class NewVehicleEventBuilder extends Builder<Event> {
 
 	public NewVehicleEventBuilder() {
 		super("new_vehicle");
@@ -24,12 +23,11 @@ public class NewVehicleEventBuilder extends Builder<Event>{
 		int contClass = data.getInt("class");
 		JSONArray it = data.getJSONArray("itinerary");
 		List<String> itinerary = new ArrayList<>();
-		
-		for(Object i: it)
-			itinerary.add(i.toString()); //TODO asi?
-		
+
+		for (Object i : it)
+			itinerary.add(i.toString()); // TODO revisar
+
 		return new NewVehicleEvent(time, id, maxSpeed, contClass, itinerary);
 	}
-
 
 }

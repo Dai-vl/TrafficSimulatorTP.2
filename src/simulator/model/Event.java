@@ -2,7 +2,7 @@ package simulator.model;
 
 public abstract class Event implements Comparable<Event> {
 
-	protected int _time; //tiempo evento es ejecutado
+	protected int _time;
 
 	Event(int time) {
 		if (time < 1)
@@ -14,11 +14,14 @@ public abstract class Event implements Comparable<Event> {
 		return _time;
 	}
 
-	@Override
 	public int compareTo(Event o) {
-		if(o._time < _time) { return 1;	}
-		else if(o._time > _time) { return -1; }
-		else { return 0; }	
+		if (o._time < _time) {
+			return 1;
+		} else if (o._time > _time) {
+			return -1;
+		} else {
+			return 0;
+		}
 	}
 
 	abstract void execute(RoadMap map);

@@ -1,6 +1,7 @@
 package simulator.launcher;
 
 import java.io.IOException;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -9,6 +10,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import simulator.factories.BuilderBasedFactory;
 import simulator.factories.Factory;
 import simulator.model.Event;
 
@@ -17,6 +19,7 @@ public class Main {
 	private final static Integer _timeLimitDefaultValue = 10;
 	private static String _inFile = null;
 	private static String _outFile = null;
+	private static int _n;
 	private static Factory<Event> _eventsFactory = null;
 
 	private static void parseArgs(String[] args) {
@@ -33,6 +36,7 @@ public class Main {
 			parseHelpOption(line, cmdLineOptions);
 			parseInFileOption(line);
 			parseOutFileOption(line);
+			parseTicksOption(line);
 
 			// if there are some remaining arguments, then something wrong is
 			// provided in the command line!
@@ -82,9 +86,17 @@ public class Main {
 		_outFile = line.getOptionValue("o");
 	}
 
-	private static void initFactories() {
+	private static void parseTicksOption(CommandLine line) throws ParseException {
+		if (line.getOptionValue("t") == null) {
+			_n = _timeLimitDefaultValue;
+		} else {
+			_n = Integer.parseInt(line.getOptionValue("t"));
+		}
+	}
 
+	private static void initFactories() {
 		// TODO complete this method to initialize _eventsFactory
+		_eventsFactory = new BuilderBasedFactory<Event>(null);
 
 	}
 
