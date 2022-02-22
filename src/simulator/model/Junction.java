@@ -46,7 +46,7 @@ public class Junction extends SimulatedObject {
 			throw new IllegalArgumentException("Not valid Road: in addIncommingRoad");
 
 		incomingRoad.add(r);
-		List<Vehicle> auxList = new LinkedList<>(r.getVehicles()); // FIXME esto vale null y no se q hacer
+		List<Vehicle> auxList = new LinkedList<>();
 		queue.add(auxList);
 		roadQueue.put(r, auxList);
 	}
