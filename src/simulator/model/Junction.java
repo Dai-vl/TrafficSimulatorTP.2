@@ -60,7 +60,8 @@ public class Junction extends SimulatedObject {
 	}
 
 	void enter(Vehicle v) {
-		v.getRoad().enter(v);
+		List<Vehicle> queue = roadQueue.get(v.getRoad()); // FIXME esto es asi el resto ª
+		queue.add(v);
 	}
 
 	public Road roadTo(Junction j) {
@@ -69,6 +70,7 @@ public class Junction extends SimulatedObject {
 
 	void advance(int time) {
 		List<Vehicle> movingVehicles = new ArrayList<>();
+		// FIXME esto esta mal queue no cambia asi q no avanzan
 		for (int i = 0; i < queue.size(); i++) {
 			movingVehicles = dqStrategy.dequeue(queue.get(i));
 
@@ -99,7 +101,6 @@ public class Junction extends SimulatedObject {
 
 		for (int j = 0; j < queue.size(); j++) { // TODO revisar
 			JSONObject jo2 = new JSONObject();
-			JSONObject jo3 = new JSONObject();
 			JSONArray ja2 = new JSONArray(queue.get(j));
 
 			jo2.put("road", incomingRoad.get(j)); // se supone que tienen q coincidir?
