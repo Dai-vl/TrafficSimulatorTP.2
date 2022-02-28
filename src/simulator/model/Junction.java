@@ -39,6 +39,7 @@ public class Junction extends SimulatedObject {
 		outgoingRoad = new HashMap<>();
 		queue = new ArrayList<>();
 		roadQueue = new HashMap<>();
+		currGreen = -1; // TODO lo he inicializado asi para probar
 	}
 
 	public void addIncommingRoad(Road r) throws IllegalArgumentException {
@@ -91,7 +92,10 @@ public class Junction extends SimulatedObject {
 		JSONArray ja = new JSONArray();
 
 		jo1.put("id", this.getId());
-		jo1.put("green", currGreen);
+		if (currGreen != -1)
+			jo1.put("green", incomingRoad.get(currGreen));
+		else
+			jo1.put("green", "none");
 
 		for (int j = 0; j < queue.size(); j++) { // TODO revisar
 			JSONObject jo2 = new JSONObject();
@@ -99,9 +103,10 @@ public class Junction extends SimulatedObject {
 			JSONArray ja2 = new JSONArray(queue.get(j));
 
 			jo2.put("road", incomingRoad.get(j)); // se supone que tienen q coincidir?
+			jo2.put("vehicles", ja2);
 			ja.put(jo2);
-			jo3.put("vehicles", ja2);
-			ja.put(jo3);
+			// jo3.put("vehicles", ja2);
+			// ja.put(jo3);
 
 			/*
 			 * for (int i = 0; i < queue.get(i).size(); i++) { ja2.put(queue.get(i)); }

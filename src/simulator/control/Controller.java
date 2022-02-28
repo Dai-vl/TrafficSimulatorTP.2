@@ -60,13 +60,13 @@ public class Controller {
 
 		PrintStream print = new PrintStream(out);
 		print.println("{");
-		print.println("\" states\" : [");
+		print.println("  " + "\"states\": [");
 
 		for (int i = 0; i < n; i++) {
 			ts.advance();
-			print.println(ts.report());
+			print.print(ts.report());
 			if (i < n - 1)
-				print.print(",");
+				print.println(",");
 
 		}
 

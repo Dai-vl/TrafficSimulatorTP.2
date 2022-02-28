@@ -45,7 +45,7 @@ public class Vehicle extends SimulatedObject {
 		this.actSpeed = min(s, maxSpeed);
 	}
 
-	protected void setContaminationClass(int c) throws IllegalArgumentException {
+	protected void setContClass(int c) throws IllegalArgumentException {
 		if (c >= 0 && c <= 10)
 			this.contClass = c;
 		else
@@ -83,8 +83,9 @@ public class Vehicle extends SimulatedObject {
 
 			if (location >= road.getLength()) {
 				if (junctionInd < itinerary.size() - 1) {
-					itinerary.get(junctionInd).enter(this);
+					// itinerary.get(junctionInd).enter(this);
 					status = VehicleStatus.WAITING;
+					this.setSpeed(0); // TODO cambiado ver si es asi
 				} else {
 					status = VehicleStatus.ARRIVED;
 				}
@@ -132,7 +133,7 @@ public class Vehicle extends SimulatedObject {
 		return status;
 	}
 
-	public int getToatalCO2() {
+	public int getTotalCO2() {
 		return contTotal;
 	}
 

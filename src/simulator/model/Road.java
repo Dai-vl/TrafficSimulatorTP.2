@@ -25,14 +25,16 @@ public abstract class Road extends SimulatedObject {
 		if (maxSpeed <= 0 || contLimit < 0 || length <= 0 || srcJunc == null || destJunc == null || weather == null)
 			throw new IllegalArgumentException("Constructor Road no válido");
 		this.srcJunc = srcJunc;
-		this.srcJunc.addOutgoingRoad(this);
 		this.destJunc = destJunc;
-		this.destJunc.addIncommingRoad(this);
 		this.maxSpeed = maxSpeed;
+		this.actLimSpeed = maxSpeed;
 		this.length = length;
 		this.weather = weather;
 		this.contLimit = contLimit;
 		vehicles = new ArrayList<>();
+		conTotal = 0;
+		this.srcJunc.addOutgoingRoad(this);
+		this.destJunc.addIncommingRoad(this);
 	}
 
 	public void enter(Vehicle v) throws IllegalArgumentException {
@@ -57,7 +59,7 @@ public abstract class Road extends SimulatedObject {
 		if (c >= 0)
 			conTotal += c;
 		else
-			throw new IllegalArgumentException("c must be positive");
+			throw new IllegalArgumentException("contamination in road must be positive");
 	}
 
 	abstract void reduceTotalContamination();
@@ -84,11 +86,12 @@ public abstract class Road extends SimulatedObject {
 		jo1.put("speedlimit", actLimSpeed);
 		jo1.put("weather", weather.toString());
 		jo1.put("co2", conTotal);
-		JSONArray ja = new JSONArray(vehicles);
+		JSONArray ja = new JSONArray();
 		// TODO revisar
-		/*
-		 * for (Vehicle v : vehicles) { ja.put(v.getId()); }
-		 */
+
+		for (Vehicle v : vehicles) {
+			ja.put(v.getId());
+		}
 
 		jo1.put("vehicles", ja);
 

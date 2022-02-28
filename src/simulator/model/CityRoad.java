@@ -11,22 +11,19 @@ public class CityRoad extends Road {
 	}
 
 	void reduceTotalContamination() {
-		try {
+		if (getTotalCO2() != 0) { // TODO revisar
 			if (getWeather().equals(Weather.WINDY) || getWeather().equals(Weather.STORM))
 				setTotalCO2(getTotalCO2() - WINDY_STORM);
 			else
 				setTotalCO2(getTotalCO2() - NOT_WINDY_STORM);
-		} catch (IllegalArgumentException ie) {
-			System.out.println(ie.getMessage());
 		}
-
 	}
 
 	void updateSpeedLimit() {
 	}
 
 	int calculateVehicleSpeed(Vehicle v) {
-		return (11 - v.getContClass()) * this.getSpeedLimit();
+		return ((11 - v.getContClass()) * this.getSpeedLimit()) / 11;
 	}
 
 }

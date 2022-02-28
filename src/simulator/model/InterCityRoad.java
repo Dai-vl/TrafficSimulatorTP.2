@@ -8,13 +8,10 @@ public class InterCityRoad extends Road {
 	}
 
 	void reduceTotalContamination() {
-		try {
+		if (getTotalCO2() != 0) {
 			int c = (100 - getAtmosphCond()) * getTotalCO2() / 100;
 			setTotalCO2(c);
-		} catch (IllegalArgumentException ie) {
-			System.out.println(ie.getMessage());
 		}
-
 	}
 
 	private int getAtmosphCond() {

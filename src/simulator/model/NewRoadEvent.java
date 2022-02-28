@@ -1,13 +1,14 @@
 package simulator.model;
 
-public abstract class NewRoadEvent extends Event{
-	
+public abstract class NewRoadEvent extends Event {
+
 	protected String id, srcJun, destJunc;
 	protected int length, co2Limit, maxSpeed;
 	protected Weather weather;
 	protected Junction src, dest;
 
-	public NewRoadEvent(int time, String id, String srcJun, String destJunc, int length, int co2Limit,	int maxSpeed, Weather weather) {
+	public NewRoadEvent(int time, String id, String srcJun, String destJunc, int length, int co2Limit, int maxSpeed,
+			Weather weather) {
 		super(time);
 		this.id = id;
 		this.srcJun = srcJun;
@@ -19,10 +20,11 @@ public abstract class NewRoadEvent extends Event{
 	}
 
 	void execute(RoadMap map) {
-		src = map.getJunction(srcJun); dest = map.getJunction(destJunc);
+		src = map.getJunction(srcJun);
+		dest = map.getJunction(destJunc);
 		map.addRoad(createRoadObject());
 	}
-	
+
 	abstract Road createRoadObject();
 
 }

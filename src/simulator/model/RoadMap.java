@@ -97,22 +97,28 @@ public class RoadMap {
 	public JSONObject report() {
 		JSONObject jo1 = new JSONObject(); // TODO revisar
 
-		JSONArray ja = new JSONArray(junctions);
-		/*
-		 * for (Junction q : junctions) { ja.put(q); }
-		 */
+		JSONArray ja = new JSONArray();
+
+		for (Junction q : junctions) {
+			ja.put(q.report());
+		}
+
 		jo1.put("junctions", ja);
 
-		JSONArray je = new JSONArray(roads);
-		/*
-		 * for (Road q : roads) { je.put(q); }
-		 */
-		jo1.put("road", je);
+		JSONArray je = new JSONArray();
 
-		JSONArray ji = new JSONArray(vehicles);
-		/*
-		 * for (Vehicle q : vehicles) { ji.put(q); }
-		 */
+		for (Road q : roads) {
+			je.put(q.report());
+		}
+
+		jo1.put("roads", je);
+
+		JSONArray ji = new JSONArray();
+
+		for (Vehicle q : vehicles) {
+			ji.put(q.report());
+		}
+
 		jo1.put("vehicles", ji);
 
 		return jo1;
