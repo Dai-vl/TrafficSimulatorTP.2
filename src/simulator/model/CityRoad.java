@@ -11,7 +11,7 @@ public class CityRoad extends Road {
 	}
 
 	void reduceTotalContamination() {
-		if (getTotalCO2() != 0) { // TODO revisar
+		if (getTotalCO2() != 0) {
 			if (getWeather().equals(Weather.WINDY) || getWeather().equals(Weather.STORM))
 				setTotalCO2(getTotalCO2() - WINDY_STORM);
 			else

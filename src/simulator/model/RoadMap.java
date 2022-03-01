@@ -18,7 +18,7 @@ public class RoadMap {
 	private Map<String, Road> roadMap;
 	private Map<String, Vehicle> vehicleMap;
 
-	protected RoadMap() { // TODO revisar
+	RoadMap() {
 		junctions = new ArrayList<>();
 		roads = new ArrayList<>();
 		vehicles = new ArrayList<>();
@@ -50,7 +50,7 @@ public class RoadMap {
 			throw new IllegalArgumentException("Not valid junction: in addVehicle (ID)");
 
 		Junction previous = v.getItinerary().get(0);
-		for (Junction current : v.getItinerary()) { // TODO revisar
+		for (Junction current : v.getItinerary()) {
 			if (previous != current) {
 				if (previous.roadTo(current) == null)
 					throw new IllegalArgumentException("Not valid junction: in addRoad (cruce conecta carretera)");
@@ -95,7 +95,7 @@ public class RoadMap {
 	}
 
 	public JSONObject report() {
-		JSONObject jo1 = new JSONObject(); // TODO revisar
+		JSONObject jo1 = new JSONObject();
 
 		JSONArray ja = new JSONArray();
 

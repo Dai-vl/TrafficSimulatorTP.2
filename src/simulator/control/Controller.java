@@ -33,7 +33,7 @@ public class Controller {
 	}
 
 	public void loadEvents(InputStream in) throws IOException {
-		JSONObject jo = new JSONObject(new JSONTokener(in)); // TODO revisar
+		JSONObject jo = new JSONObject(new JSONTokener(in));
 
 		if (!jo.has("events"))
 			throw new IllegalArgumentException("Input Stream incorrecto");
@@ -45,16 +45,10 @@ public class Controller {
 			ts.addEvent(ef.createInstance(e));
 		}
 
-		// TODO cerrar input?
 		in.close();
 	}
 
 	public void run(int n, OutputStream out) {
-		/*
-		 * JSONArray ja = new JSONArray(); for (int i = 0; i < n; i++) { ts.advance();
-		 * ja.put(ts.report()); } JSONObject jo = new JSONObject(); jo.put("states",
-		 * ja); PrintStream p = new PrintStream(out); p.print(jo.toString());
-		 */
 
 		if (out == null) {
 			out = new OutputStream() {

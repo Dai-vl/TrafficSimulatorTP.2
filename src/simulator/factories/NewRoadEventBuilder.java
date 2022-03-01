@@ -18,7 +18,7 @@ public abstract class NewRoadEventBuilder extends Builder<Event> {
 	}
 
 	protected Event createTheInstance(JSONObject data) {
-		if (data != null && !data.isEmpty()) { // TODO revisar si hace falta
+		if (data != null && !data.isEmpty()) {
 			time = data.getInt("time");
 			id = data.getString("id");
 			srcJun = data.getString("src");

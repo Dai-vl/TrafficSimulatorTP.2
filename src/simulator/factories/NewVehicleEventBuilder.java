@@ -25,7 +25,7 @@ public class NewVehicleEventBuilder extends Builder<Event> {
 		List<String> itinerary = new ArrayList<>();
 
 		for (Object i : it)
-			itinerary.add(i.toString()); // TODO revisar
+			itinerary.add(i.toString());
 
 		return new NewVehicleEvent(time, id, maxSpeed, contClass, itinerary);
 	}

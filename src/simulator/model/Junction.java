@@ -12,7 +12,7 @@ import org.json.JSONObject;
 public class Junction extends SimulatedObject {
 
 	private List<Road> incomingRoad;
-	private Map<Junction, Road> outgoingRoad; // cruce al que va, carretera por la que va
+	private Map<Junction, Road> outgoingRoad;
 	private List<List<Vehicle>> queue;
 	private Map<Road, List<Vehicle>> roadQueue;
 	private int currGreen, lastSwitchingTime, xCoor, yCoor;
@@ -39,7 +39,7 @@ public class Junction extends SimulatedObject {
 		outgoingRoad = new HashMap<>();
 		queue = new ArrayList<>();
 		roadQueue = new HashMap<>();
-		currGreen = -1; // TODO lo he inicializado asi para probar
+		currGreen = -1;
 	}
 
 	public void addIncommingRoad(Road r) throws IllegalArgumentException {
@@ -60,7 +60,7 @@ public class Junction extends SimulatedObject {
 	}
 
 	void enter(Vehicle v) {
-		List<Vehicle> q = roadQueue.get(v.getRoad()); // FIXME esto es asi el resto ª
+		List<Vehicle> q = roadQueue.get(v.getRoad());
 		q.add(v);
 	}
 
@@ -69,11 +69,6 @@ public class Junction extends SimulatedObject {
 	}
 
 	void advance(int time) {
-		/*
-		 * if (currGreen != -1) { List<Vehicle> vehiclesToMove =
-		 * dqStrategy.dequeue(queue.get(currGreen)); for (Vehicle v : vehiclesToMove) {
-		 * v.moveToNextRoad(); queue.get(currGreen).remove(v); } }
-		 */
 
 		if (currGreen != -1) {
 			List<Vehicle> movingVehicles = dqStrategy.dequeue(queue.get(currGreen));
@@ -102,22 +97,16 @@ public class Junction extends SimulatedObject {
 		else
 			jo1.put("green", "none");
 
-		for (int j = 0; j < queue.size(); j++) { // TODO revisar
+		for (int j = 0; j < queue.size(); j++) {
 			JSONObject jo2 = new JSONObject();
 			JSONArray ja2 = new JSONArray();
 			for (Vehicle v : queue.get(j)) {
 				ja2.put(v.getId());
 			}
 
-			jo2.put("road", incomingRoad.get(j)); // se supone que tienen q coincidir?
+			jo2.put("road", incomingRoad.get(j));
 			jo2.put("vehicles", ja2);
 			ja.put(jo2);
-			// jo3.put("vehicles", ja2);
-			// ja.put(jo3);
-
-			/*
-			 * for (int i = 0; i < queue.get(i).size(); i++) { ja2.put(queue.get(i)); }
-			 */
 
 		}
 

@@ -141,7 +141,6 @@ public class Main {
 	}
 
 	private static void startBatchMode() throws IOException {
-		// TODO revisar
 		InputStream in = new FileInputStream(new File(_inFile));
 		OutputStream out = _outFile == null ? System.out : new FileOutputStream(new File(_outFile));
 

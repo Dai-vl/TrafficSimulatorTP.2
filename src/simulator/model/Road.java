@@ -76,7 +76,7 @@ public abstract class Road extends SimulatedObject {
 			v.advance(time);
 		}
 
-		vehicles.sort((Vehicle v1, Vehicle v2) -> v1.compareTo(v2)); // TODO revisar
+		vehicles.sort((Vehicle v1, Vehicle v2) -> v1.compareTo(v2));
 	}
 
 	public JSONObject report() {
@@ -87,7 +87,6 @@ public abstract class Road extends SimulatedObject {
 		jo1.put("weather", weather.toString());
 		jo1.put("co2", conTotal);
 		JSONArray ja = new JSONArray();
-		// TODO revisar
 
 		for (Vehicle v : vehicles) {
 			ja.put(v.getId());
@@ -126,7 +125,7 @@ public abstract class Road extends SimulatedObject {
 		return conTotal;
 	}
 
-	protected void setTotalCO2(int c) throws IllegalArgumentException { // TODO revisar
+	protected void setTotalCO2(int c) throws IllegalArgumentException {
 		if (c < 0)
 			throw new IllegalArgumentException("Negative total contamination in Road");
 		conTotal = c;
@@ -136,7 +135,7 @@ public abstract class Road extends SimulatedObject {
 		return actLimSpeed;
 	}
 
-	protected void setSpeedLimit(int l) {// TODO revisar
+	protected void setSpeedLimit(int l) {
 		actLimSpeed = l;
 	}
 
