@@ -50,7 +50,12 @@ public class Controller {
 	}
 
 	public void run(int n, OutputStream out) {
-		// TODO revisar
+		/*
+		 * JSONArray ja = new JSONArray(); for (int i = 0; i < n; i++) { ts.advance();
+		 * ja.put(ts.report()); } JSONObject jo = new JSONObject(); jo.put("states",
+		 * ja); PrintStream p = new PrintStream(out); p.print(jo.toString());
+		 */
+
 		if (out == null) {
 			out = new OutputStream() {
 				public void write(int b) throws IOException {
@@ -70,7 +75,7 @@ public class Controller {
 
 		}
 
-		print.println("]");
+		print.println("\n]");
 		print.println("}");
 
 	}

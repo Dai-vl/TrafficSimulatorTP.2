@@ -60,8 +60,8 @@ public class Junction extends SimulatedObject {
 	}
 
 	void enter(Vehicle v) {
-		List<Vehicle> queue = roadQueue.get(v.getRoad()); // FIXME esto es asi el resto ª
-		queue.add(v);
+		List<Vehicle> q = roadQueue.get(v.getRoad()); // FIXME esto es asi el resto ª
+		q.add(v);
 	}
 
 	public Road roadTo(Junction j) {
@@ -69,17 +69,20 @@ public class Junction extends SimulatedObject {
 	}
 
 	void advance(int time) {
-		List<Vehicle> movingVehicles = new ArrayList<>();
-		// FIXME esto esta mal queue no cambia asi q no avanzan
-		for (int i = 0; i < queue.size(); i++) {
-			movingVehicles = dqStrategy.dequeue(queue.get(i));
+		/*
+		 * if (currGreen != -1) { List<Vehicle> vehiclesToMove =
+		 * dqStrategy.dequeue(queue.get(currGreen)); for (Vehicle v : vehiclesToMove) {
+		 * v.moveToNextRoad(); queue.get(currGreen).remove(v); } }
+		 */
 
+		if (currGreen != -1) {
+			List<Vehicle> movingVehicles = dqStrategy.dequeue(queue.get(currGreen));
 			for (int j = 0; j < movingVehicles.size(); j++) {
 				movingVehicles.get(j).moveToNextRoad();
 			}
 
-			queue.get(i).removeAll(movingVehicles); // TODO revisar
-			roadQueue.replace(incomingRoad.get(i), queue.get(i));
+			queue.get(currGreen).removeAll(movingVehicles);
+			roadQueue.replace(incomingRoad.get(currGreen), queue.get(currGreen));
 		}
 
 		int nextRoad = lsStrategy.chooseNextGreen(incomingRoad, queue, currGreen, lastSwitchingTime, time);
@@ -101,7 +104,10 @@ public class Junction extends SimulatedObject {
 
 		for (int j = 0; j < queue.size(); j++) { // TODO revisar
 			JSONObject jo2 = new JSONObject();
-			JSONArray ja2 = new JSONArray(queue.get(j));
+			JSONArray ja2 = new JSONArray();
+			for (Vehicle v : queue.get(j)) {
+				ja2.put(v.getId());
+			}
 
 			jo2.put("road", incomingRoad.get(j)); // se supone que tienen q coincidir?
 			jo2.put("vehicles", ja2);

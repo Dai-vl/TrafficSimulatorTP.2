@@ -19,8 +19,7 @@ public class Vehicle extends SimulatedObject {
 	private int disTotal;
 	private int junctionInd; // indice del ultimo cruce en el itinerario que haya usado
 
-	protected Vehicle(String id, int maxSpeed, int contClass, List<Junction> itinerary)
-			throws IllegalArgumentException {
+	Vehicle(String id, int maxSpeed, int contClass, List<Junction> itinerary) throws IllegalArgumentException {
 		super(id);
 		if (maxSpeed <= 0 || contClass < 0 || contClass > 10 || itinerary.size() < 2)
 			throw new IllegalArgumentException("ERROR!");
@@ -39,20 +38,21 @@ public class Vehicle extends SimulatedObject {
 			return y;
 	}
 
-	protected void setSpeed(int s) throws IllegalArgumentException {
+	void setSpeed(int s) throws IllegalArgumentException {
 		if (s < 0)
 			throw new IllegalArgumentException("ERROR!");
-		this.actSpeed = min(s, maxSpeed);
+		if (!VehicleStatus.WAITING.equals(status))
+			this.actSpeed = min(s, maxSpeed);
 	}
 
-	protected void setContClass(int c) throws IllegalArgumentException {
+	void setContClass(int c) throws IllegalArgumentException {
 		if (c >= 0 && c <= 10)
 			this.contClass = c;
 		else
 			throw new IllegalArgumentException("ERROR!");
 	}
 
-	protected void moveToNextRoad() throws IllegalArgumentException {
+	void moveToNextRoad() throws IllegalArgumentException {
 		if (!VehicleStatus.PENDING.equals(status) && !VehicleStatus.WAITING.equals(status))
 			throw new IllegalArgumentException("moveToNextRoad: Vehicle");
 
@@ -61,6 +61,8 @@ public class Vehicle extends SimulatedObject {
 
 		if (junctionInd < itinerary.size() - 1) {
 			road = itinerary.get(junctionInd).roadTo(itinerary.get(junctionInd + 1));
+			location = 0;
+			this.setSpeed(0);
 			road.enter(this);
 			junctionInd++;
 			status = VehicleStatus.TRAVELING;
@@ -68,7 +70,7 @@ public class Vehicle extends SimulatedObject {
 			status = VehicleStatus.ARRIVED;
 	}
 
-	protected void advance(int time) {
+	void advance(int time) {
 		int locIni = location;
 		int adv = 0;
 		int c;
@@ -82,17 +84,11 @@ public class Vehicle extends SimulatedObject {
 			road.addContamination(c);
 
 			if (location >= road.getLength()) {
-				if (junctionInd < itinerary.size() - 1) {
-					// itinerary.get(junctionInd).enter(this);
-					status = VehicleStatus.WAITING;
-					this.setSpeed(0); // TODO cambiado ver si es asi
-				} else {
-					status = VehicleStatus.ARRIVED;
-				}
+				actSpeed = 0;
+				itinerary.get(junctionInd).enter(this);
+				status = VehicleStatus.WAITING;
+				// TODO cambiado ver si es asi
 			}
-
-		} else {
-			this.setSpeed(0);
 		}
 	}
 
@@ -105,7 +101,7 @@ public class Vehicle extends SimulatedObject {
 		jo1.put("co2", contTotal);
 		jo1.put("class", contClass);
 		jo1.put("status", status.toString());
-		if (!status.equals(VehicleStatus.PENDING) || !status.equals(VehicleStatus.ARRIVED)) {
+		if (!status.equals(VehicleStatus.PENDING) && !status.equals(VehicleStatus.ARRIVED)) {
 			jo1.put("road", road);
 			jo1.put("location", location);
 		}
@@ -147,9 +143,9 @@ public class Vehicle extends SimulatedObject {
 
 	int compareTo(Vehicle v) {
 		if (v.getLocation() < getLocation()) {
-			return 1;
-		} else if (v.getLocation() > getLocation()) {
 			return -1;
+		} else if (v.getLocation() > getLocation()) {
+			return 1;
 		} else {
 			return 0;
 		}

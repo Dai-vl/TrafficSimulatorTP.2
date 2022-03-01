@@ -23,14 +23,14 @@ public class MostCrowdedStrategy implements LightSwitchingStrategy {
 	}
 
 	private int largestQueue(List<List<Vehicle>> qs, int iniPos) {
-		int max = qs.get(0).size();
 		int look;
+		int msp = iniPos;
 		for (int i = 1; i < qs.size(); i++) {
 			look = (iniPos + i) % qs.size();
-			if (qs.get(look).size() < max)
-				max = qs.get(look).size();
+			if (qs.get(msp).size() < qs.get(look).size())
+				msp = look;
 		}
-		return max;
+		return msp;
 	}
 
 }
