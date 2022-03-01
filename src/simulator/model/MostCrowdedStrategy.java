@@ -7,6 +7,9 @@ public class MostCrowdedStrategy implements LightSwitchingStrategy {
 	private int _timeSlot;
 	private final static int posIni = 0;
 
+	public MostCrowdedStrategy() {
+	}
+
 	public MostCrowdedStrategy(int timeSlot) {
 		_timeSlot = timeSlot;
 	}
@@ -19,7 +22,7 @@ public class MostCrowdedStrategy implements LightSwitchingStrategy {
 			return largestQueue(qs, posIni);
 		if (currTime - lastSwitchingTime < _timeSlot)
 			return currGreen;
-		return largestQueue(qs, currGreen + 1);
+		return largestQueue(qs, (currGreen + 1) % roads.size());
 	}
 
 	private int largestQueue(List<List<Vehicle>> qs, int iniPos) {

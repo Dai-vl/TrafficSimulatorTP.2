@@ -7,6 +7,10 @@ public abstract class NewRoadEvent extends Event {
 	protected Weather weather;
 	protected Junction src, dest;
 
+	public NewRoadEvent() {
+		super();
+	};
+
 	public NewRoadEvent(int time, String id, String srcJun, String destJunc, int length, int co2Limit, int maxSpeed,
 			Weather weather) {
 		super(time);

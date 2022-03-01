@@ -13,12 +13,11 @@ public class RoundRobinStrategyBuilder extends Builder<LightSwitchingStrategy> {
 
 	protected LightSwitchingStrategy createTheInstance(JSONObject data) {
 		int time = 1;
-		RoundRobinStrategy rrs = null;
-		if (data != null) {
+		if (data != null && !data.isEmpty()) {
 			time = data.getInt("timeslot");
-			rrs = new RoundRobinStrategy(time);
+			return new RoundRobinStrategy(time);
 		}
-		return rrs;
+		return new RoundRobinStrategy();
 	}
 
 }

@@ -13,11 +13,11 @@ public class Vehicle extends SimulatedObject {
 	private int actSpeed;
 	private VehicleStatus status;
 	private Road road;
-	private int location; // comienzo carretera 0
-	private int contClass; // entre 0 y 10
-	private int contTotal; // cont total vehiculo
+	private int location;
+	private int contClass;
+	private int contTotal;
 	private int disTotal;
-	private int junctionInd; // indice del ultimo cruce en el itinerario que haya usado
+	private int junctionInd;
 
 	Vehicle(String id, int maxSpeed, int contClass, List<Junction> itinerary) throws IllegalArgumentException {
 		super(id);
@@ -41,7 +41,7 @@ public class Vehicle extends SimulatedObject {
 	void setSpeed(int s) throws IllegalArgumentException {
 		if (s < 0)
 			throw new IllegalArgumentException("ERROR!");
-		if (!VehicleStatus.WAITING.equals(status))
+		if (VehicleStatus.TRAVELING.equals(status))
 			this.actSpeed = min(s, maxSpeed);
 	}
 
@@ -87,7 +87,6 @@ public class Vehicle extends SimulatedObject {
 				actSpeed = 0;
 				itinerary.get(junctionInd).enter(this);
 				status = VehicleStatus.WAITING;
-				// TODO cambiado ver si es asi
 			}
 		}
 	}
@@ -95,7 +94,7 @@ public class Vehicle extends SimulatedObject {
 	public JSONObject report() {
 		JSONObject jo1 = new JSONObject();
 
-		jo1.put("id", this.getId());
+		jo1.put("id", _id);
 		jo1.put("speed", actSpeed);
 		jo1.put("distance", disTotal);
 		jo1.put("co2", contTotal);
