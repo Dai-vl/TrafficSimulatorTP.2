@@ -93,7 +93,7 @@ public class Junction extends SimulatedObject {
 
 		jo1.put("id", this.getId());
 		if (currGreen != -1)
-			jo1.put("green", incomingRoad.get(currGreen));
+			jo1.put("green", incomingRoad.get(currGreen).getId());
 		else
 			jo1.put("green", "none");
 
@@ -104,7 +104,7 @@ public class Junction extends SimulatedObject {
 				ja2.put(v.getId());
 			}
 
-			jo2.put("road", incomingRoad.get(j));
+			jo2.put("road", incomingRoad.get(j).getId());
 			jo2.put("vehicles", ja2);
 			ja.put(jo2);
 

@@ -94,14 +94,14 @@ public class Vehicle extends SimulatedObject {
 	public JSONObject report() {
 		JSONObject jo1 = new JSONObject();
 
-		jo1.put("id", _id);
+		jo1.put("id", String.valueOf(_id));
 		jo1.put("speed", actSpeed);
 		jo1.put("distance", disTotal);
 		jo1.put("co2", contTotal);
 		jo1.put("class", contClass);
 		jo1.put("status", status.toString());
 		if (!status.equals(VehicleStatus.PENDING) && !status.equals(VehicleStatus.ARRIVED)) {
-			jo1.put("road", road);
+			jo1.put("road", road.getId());
 			jo1.put("location", location);
 		}
 

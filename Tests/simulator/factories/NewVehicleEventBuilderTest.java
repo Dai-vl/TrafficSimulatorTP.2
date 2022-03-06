@@ -43,6 +43,7 @@ class NewVehicleEventBuilderTest {
 		ts.addEvent(jeb.createInstance(new JSONObject(inputJson1)));
 		ts.addEvent(jeb.createInstance(new JSONObject(inputJson2)));
 
+		
 		String inputJson3 = "{\n" + "	  \"type\" : \"new_city_road\",\n" + "  	  \"data\" : {\n"
 				+ "    	  \"time\"     : 1,\n" + "    	   \"id\"       : \"r1\",\n"
 				+ "           \"src\"      : \"j1\",\n" + "           \"dest\"     : \"j2\",\n"
@@ -59,61 +60,76 @@ class NewVehicleEventBuilderTest {
 
 	@Test
 	void test_1() {
-
+	
 		TrafficSimulator ts = createSim();
-
-		String inputJson = "{\n" + "	  \"type\" : \"new_vehicle\",\n" + "  	  \"data\" : {\n"
-				+ "          \"time\"      : 1,\n" + "          \"id\"        : \"v1\",\n"
-				+ "          \"maxspeed\"  : 100,\n" + "          \"class\"     : 3,\n"
-				+ "          \"itinerary\" : [\"j1\", \"j2\"]\n" + "      }}";
-
+				
+		String inputJson = "{\n"
+				+ "	  \"type\" : \"new_vehicle\",\n"
+				+ "  	  \"data\" : {\n"
+				+ "          \"time\"      : 1,\n"
+				+ "          \"id\"        : \"v1\",\n"
+				+ "          \"maxspeed\"  : 100,\n"
+				+ "          \"class\"     : 3,\n"
+				+ "          \"itinerary\" : [\"j1\", \"j2\"]\n"
+				+ "      }}";
+		
+		
 		NewVehicleEventBuilder eb = new NewVehicleEventBuilder();
-		Event e = eb.createInstance(new JSONObject(inputJson));
-
+		Event e = eb.createInstance( new JSONObject(inputJson) );	
+		
 		ts.addEvent(e);
-
+		
 		ts.advance();
-
+				
 		String s = "{\"time\":1,\"state\":{\"roads\":[{\"speedlimit\":120,\"co2\":261,\"weather\":\"SUNNY\",\"vehicles\":[\"v1\"],\"id\":\"r1\"}],\"vehicles\":[{\"distance\":87,\"road\":\"r1\",\"co2\":261,\"location\":87,\"id\":\"v1\",\"class\":3,\"speed\":87,\"status\":\"TRAVELING\"}],\"junctions\":[{\"green\":\"none\",\"queues\":[],\"id\":\"j1\"},{\"green\":\"r1\",\"queues\":[{\"road\":\"r1\",\"vehicles\":[]}],\"id\":\"j2\"}]}}";
-
-		String c = ts.report().toString();
-		assertTrue(new JSONObject(s).similar(new JSONObject(c)));
+		assertTrue(new JSONObject(s).similar(ts.report()));
+	
 	}
 
 	@Test
 	void test_2() {
-
+	
 		// error in time
-		String inputJson = "{\n" + "	  \"type\" : \"new_vehicle\",\n" + "  	  \"data\" : {\n"
-				+ "          \"time\"      : \"boom!\",\n" + "          \"id\"        : \"v1\",\n"
-				+ "          \"maxspeed\"  : 100,\n" + "          \"class\"     : 3,\n"
-				+ "          \"itinerary\" : [\"j1\", \"j2\"]\n" + "      }}";
-
+		String inputJson = "{\n"
+				+ "	  \"type\" : \"new_vehicle\",\n"
+				+ "  	  \"data\" : {\n"
+				+ "          \"time\"      : \"boom!\",\n"
+				+ "          \"id\"        : \"v1\",\n"
+				+ "          \"maxspeed\"  : 100,\n"
+				+ "          \"class\"     : 3,\n"
+				+ "          \"itinerary\" : [\"j1\", \"j2\"]\n"
+				+ "      }}";
+		
+		
 		NewVehicleEventBuilder eb = new NewVehicleEventBuilder();
-		assertThrows(Exception.class, () -> eb.createInstance(new JSONObject(inputJson)));
-
+		assertThrows(Exception.class, () -> eb.createInstance( new JSONObject(inputJson) ));	
+	
 	}
 
 	@Test
 	void test_3() {
-
+	
 		// throws an exception when no type field is provided
 		String inputJson = "{}";
-
+		
+		
 		NewVehicleEventBuilder eb = new NewVehicleEventBuilder();
-		assertThrows(Exception.class, () -> eb.createInstance(new JSONObject(inputJson)));
-
+		assertThrows(Exception.class, () -> eb.createInstance( new JSONObject(inputJson) ));	
+		
+	
 	}
 
 	@Test
 	void test_4() {
-
+	
 		// returns null when type field is no "new_vehicle"
 		String inputJson = "{ \"type\" : \"bla\" }";
-
+		
+		
 		NewVehicleEventBuilder eb = new NewVehicleEventBuilder();
-		assertNull(eb.createInstance(new JSONObject(inputJson)));
-
+		assertNull(eb.createInstance( new JSONObject(inputJson) ));	
+		
+	
 	}
 
 }
