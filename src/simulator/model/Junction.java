@@ -1,6 +1,7 @@
 package simulator.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -112,6 +113,22 @@ public class Junction extends SimulatedObject {
 
 		jo1.put("queues", ja);
 		return jo1;
+	}
+
+	public int getX() {
+		return xCoor;
+	}
+
+	public int getY() {
+		return yCoor;
+	}
+
+	public int getGreenLightIndex() {
+		return currGreen;
+	}
+
+	public List<Road> getInRoads() {
+		return Collections.unmodifiableList(incomingRoad);
 	}
 
 }

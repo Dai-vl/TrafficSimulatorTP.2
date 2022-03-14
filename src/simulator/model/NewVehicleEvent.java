@@ -3,8 +3,8 @@ package simulator.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewVehicleEvent extends Event{
-	
+public class NewVehicleEvent extends Event {
+
 	private String id;
 	private int maxSpeed;
 	private int contClass;
@@ -21,18 +21,22 @@ public class NewVehicleEvent extends Event{
 	void execute(RoadMap map) {
 		try {
 			List<Junction> aux = new ArrayList<>();
-			
-			for(int i = 0; i < itinerary.size(); i++) {
+
+			for (int i = 0; i < itinerary.size(); i++) {
 				aux.add(map.getJunction(itinerary.get(i)));
 			}
-			
-			Vehicle v = new Vehicle(id, maxSpeed, contClass, aux); 
+
+			Vehicle v = new Vehicle(id, maxSpeed, contClass, aux);
 			v.moveToNextRoad();
 			map.addVehicle(v);
-		}
-		catch(IllegalArgumentException ie) {
+		} catch (IllegalArgumentException ie) {
 			System.out.println(ie.getMessage() + " NewCityRoadEvent: addJunction \n");
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "New Vehicle '" + id + "'";
 	}
 
 }

@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import simulator.misc.SortedArrayList;
 
-public class TrafficSimulator {
+public class TrafficSimulator implements Observable<TrafficSimObserver> {
 
 	private RoadMap roads;
 	private List<Event> events;
@@ -20,10 +20,18 @@ public class TrafficSimulator {
 
 	public void addEvent(Event e) {
 		events.add(e);
+		onEventAdded();
+	}
+
+	private void onEventAdded() {
+		// TODO Auto-generated method stub
+
 	}
 
 	public void advance() {
 		time += 1;
+
+		onAdvanceStart();
 
 		List<Event> toRemove = new SortedArrayList<Event>();
 
@@ -43,12 +51,28 @@ public class TrafficSimulator {
 		for (Road r : roads.getRoads()) {
 			r.advance(time);
 		}
+
+		onAdvanceEnd();
+	}
+
+	private void onAdvanceEnd() {
+
+	}
+
+	private void onAdvanceStart() {
+
 	}
 
 	public void reset() {
 		roads.reset();
 		events.clear();
 		time = 0;
+		onReset();
+	}
+
+	private void onReset() {
+		// TODO Auto-generated method stub
+
 	}
 
 	public JSONObject report() {
@@ -56,5 +80,24 @@ public class TrafficSimulator {
 		jo1.put("time", time);
 		jo1.put("state", roads.report());
 		return jo1;
+	}
+
+	@Override
+	public void addObserver(TrafficSimObserver o) {
+		onRegister();
+	}
+
+	private void onRegister() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void removeObserver(TrafficSimObserver o) {
+
+	}
+
+	void onError() {
+
 	}
 }
