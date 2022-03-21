@@ -9,6 +9,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -35,12 +37,14 @@ import simulator.model.DequeuingStrategy;
 import simulator.model.Event;
 import simulator.model.LightSwitchingStrategy;
 import simulator.model.TrafficSimulator;
+import simulator.view.MainWindow;
 
 public class Main {
 
 	private final static Integer _timeLimitDefaultValue = 10;
 	private static String _inFile = null;
 	private static String _outFile = null;
+	private static String _mode = null;
 	private static int _n;
 	private static Factory<Event> _eventsFactory = null;
 
@@ -56,6 +60,7 @@ public class Main {
 		try {
 			CommandLine line = parser.parse(cmdLineOptions, args);
 			parseHelpOption(line, cmdLineOptions);
+			parseModeOption(line);
 			parseInFileOption(line);
 			parseOutFileOption(line);
 			parseTicksOption(line);
@@ -85,6 +90,7 @@ public class Main {
 		cmdLineOptions.addOption(Option.builder("t").longOpt("ticks").hasArg().desc("Number of ticks").build());
 		cmdLineOptions.addOption(
 				Option.builder("o").longOpt("output").hasArg().desc("Output file, where reports are written.").build());
+		cmdLineOptions.addOption(Option.builder("m").longOpt("mode").hasArg().desc("Mode of the simulation").build());
 		cmdLineOptions.addOption(Option.builder("h").longOpt("help").desc("Print this message").build());
 
 		return cmdLineOptions;
@@ -100,13 +106,14 @@ public class Main {
 
 	private static void parseInFileOption(CommandLine line) throws ParseException {
 		_inFile = line.getOptionValue("i");
-		if (_inFile == null) {
+		if (_inFile == null && _mode.equals("console")) {
 			throw new ParseException("An events file is missing");
 		}
 	}
 
 	private static void parseOutFileOption(CommandLine line) throws ParseException {
-		_outFile = line.getOptionValue("o");
+		if (_mode.equals("console"))
+			_outFile = line.getOptionValue("o");
 	}
 
 	private static void parseTicksOption(CommandLine line) throws ParseException {
@@ -114,6 +121,14 @@ public class Main {
 			_n = _timeLimitDefaultValue;
 		} else {
 			_n = Integer.parseInt(line.getOptionValue("t"));
+		}
+	}
+
+	private static void parseModeOption(CommandLine line) throws ParseException {
+		if (line.getOptionValue("m") == null) {
+			_mode = "gui";
+		} else {
+			_mode = line.getOptionValue("m");
 		}
 	}
 
@@ -140,6 +155,26 @@ public class Main {
 
 	}
 
+	private static void startGUIMode() throws IOException {
+		TrafficSimulator simulator = new TrafficSimulator();
+		Controller control = new Controller(simulator, _eventsFactory);
+
+		InputStream in;
+		if (_inFile != null) {
+			in = new FileInputStream(new File(_inFile));
+			control.loadEvents(in);
+		}
+
+		OutputStream out = _outFile == null ? System.out : new FileOutputStream(new File(_outFile));
+
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				new MainWindow(control);
+			}
+		});
+	}
+
 	private static void startBatchMode() throws IOException {
 		InputStream in = new FileInputStream(new File(_inFile));
 		OutputStream out = _outFile == null ? System.out : new FileOutputStream(new File(_outFile));
@@ -154,7 +189,10 @@ public class Main {
 	private static void start(String[] args) throws IOException {
 		initFactories();
 		parseArgs(args);
-		startBatchMode();
+		if (_mode.equals("console"))
+			startBatchMode();
+		else
+			startGUIMode();
 	}
 
 	// example command lines:

@@ -3,10 +3,13 @@ package simulator.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -75,9 +78,20 @@ public class MainWindow extends JFrame {
 		// TODO add a map for MapByRoadComponent
 		// ...
 
-		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
+				int result = JOptionPane.showConfirmDialog(MainWindow.this, "¿Quiere salir?", "Salir del simulador : ",
+						JOptionPane.YES_NO_OPTION);
+				if (result == JOptionPane.YES_OPTION)
+					System.exit(0);
+				else if (result == JOptionPane.NO_OPTION)
+					MainWindow.this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+			}
+		});
+
 		this.pack();
 		this.setVisible(true);
+
 	}
 
 	private JPanel createViewPanel(JComponent c, String title) {
