@@ -165,8 +165,6 @@ public class Main {
 			control.loadEvents(in);
 		}
 
-		OutputStream out = _outFile == null ? System.out : new FileOutputStream(new File(_outFile));
-
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -189,7 +187,7 @@ public class Main {
 	private static void start(String[] args) throws IOException {
 		initFactories();
 		parseArgs(args);
-		if (_mode.equals("console"))
+		if (_mode != null && _mode.equals("console"))
 			startBatchMode();
 		else
 			startGUIMode();

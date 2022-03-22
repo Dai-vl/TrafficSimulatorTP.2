@@ -1,46 +1,80 @@
 package simulator.view;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.SwingUtilities;
 
 import simulator.control.Controller;
+import simulator.model.Event;
+import simulator.model.RoadMap;
+import simulator.model.TrafficSimObserver;
 
 @SuppressWarnings("serial")
-public class ControlPanel extends JPanel {
+public class ControlPanel extends JPanel implements TrafficSimObserver {
 
 	private Controller control;
+	private boolean _stopped = false;
+	private JButton fileChooser, contVehicle, changeRoadWeather, runButton, stopButton;
+	private JLabel ticksLabel;
+	private JSpinner ticksSpinner;
 
 	ControlPanel(Controller c) {
 		control = c;
+		control.addObserver(this);
 		initGUI();
 	}
 
 	private void initGUI() {
 		this.setLayout(new GridLayout(1, 2));
 
-		JPanel left = new JPanel();
-		left.setLayout(new FlowLayout(FlowLayout.LEFT));
+		initLeftButtons();
 
-		JButton fileChooser = new JButton();
+		JPanel right = new JPanel();
+		right.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
-		ImageIcon iconOpen = new ImageIcon("resources/icons/open.png");
-		fileChooser.setIcon(iconOpen);
+		JButton exitButton = new JButton();
+		exitButton.setIcon(new ImageIcon("resources/icons/exit.png"));
+		exitButton.setContentAreaFilled(false);
+		exitButton.setBorderPainted(false);
+		exitButton.setToolTipText("Exit Traffic Simulator");
+		exitButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int result = JOptionPane.showConfirmDialog((Frame) SwingUtilities.getWindowAncestor(ControlPanel.this),
+						"¿Quiere salir?", "Salir del simulador : ", JOptionPane.YES_NO_OPTION);
+				if (result == JOptionPane.YES_OPTION)
+					System.exit(0);
+
+			}
+
+		});
+
+		right.add(exitButton);
+
+		addComponentsToContainer();
+		this.add(right);
+	}
+
+	private void initLeftButtons() {
+
+		fileChooser = new JButton();
 		fileChooser.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fc = new JFileChooser();
 				int seleccion = fc.showOpenDialog(ControlPanel.this);
@@ -50,41 +84,173 @@ public class ControlPanel extends JPanel {
 					try {
 						in = new FileInputStream(fc.getSelectedFile());
 						control.loadEvents(in);
-					} catch (FileNotFoundException e1) {
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						e1.printStackTrace();
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog((Frame) SwingUtilities.getWindowAncestor(ControlPanel.this),
+								"No se ha podido abrir el archivo", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 
 				} else if (seleccion == JFileChooser.ERROR_OPTION) {
-					JOptionPane.showMessageDialog(ControlPanel.this, "Ha habido un error", "Error",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog((Frame) SwingUtilities.getWindowAncestor(ControlPanel.this),
+							"Ha habido un error", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 
 		});
 
-		JButton contVehicle = new JButton();
-		ImageIcon iconCO2 = new ImageIcon("resources/icons/co2class.png");
-		contVehicle.setIcon(iconCO2);
+		contVehicle = new JButton();
 		contVehicle.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ChangeCO2ClassDialog co2 = new ChangeCO2ClassDialog(
-						(Frame) SwingUtilities.getWindowAncestor(ControlPanel.this));
+				new ChangeCO2ClassDialog((Frame) SwingUtilities.getWindowAncestor(ControlPanel.this), control);
 			}
 
 		});
 
+		changeRoadWeather = new JButton();
+		changeRoadWeather.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new ChangeWeatherDialog((Frame) SwingUtilities.getWindowAncestor(ControlPanel.this), control);
+			}
+
+		});
+
+		ticksLabel = new JLabel("Ticks:");
+		ticksSpinner = new JSpinner();
+
+		runButton = new JButton();
+		runButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				enableToolBar(false);
+				run_sim((Integer) ticksSpinner.getValue());
+			}
+
+		});
+
+		stopButton = new JButton();
+		stopButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				stop();
+			}
+
+		});
+
+		setAppereance();
+	}
+
+	private void setAppereance() {
+		fileChooser.setContentAreaFilled(false);
+		fileChooser.setBorder(BorderFactory.createEtchedBorder(1));
+		fileChooser.setIcon(new ImageIcon("resources/icons/open.png"));
+		fileChooser.setToolTipText("Load a file with events");
+
+		contVehicle.setContentAreaFilled(false);
+		contVehicle.setBorder(BorderFactory.createEtchedBorder(1));
+		contVehicle.setIcon(new ImageIcon("resources/icons/co2class.png"));
+		contVehicle.setToolTipText("Change CO2 class of a vehicle");
+
+		changeRoadWeather.setContentAreaFilled(false);
+		changeRoadWeather.setBorder(BorderFactory.createEtchedBorder(1));
+		changeRoadWeather.setIcon(new ImageIcon("resources/icons/weather.png"));
+		changeRoadWeather.setToolTipText("Change weather of road");
+
+		ticksSpinner.setPreferredSize(new Dimension(100, 20));
+
+		runButton.setContentAreaFilled(false);
+		runButton.setBorder(BorderFactory.createEtchedBorder(1));
+		runButton.setIcon(new ImageIcon("resources/icons/run.png"));
+
+		stopButton.setContentAreaFilled(false);
+		stopButton.setBorder(BorderFactory.createEtchedBorder(1));
+		stopButton.setIcon(new ImageIcon("resources/icons/stop.png"));
+	}
+
+	private void addComponentsToContainer() {
+		JPanel left = new JPanel();
+		left.setLayout(new FlowLayout(FlowLayout.LEFT));
+
 		left.add(fileChooser);
 		left.add(contVehicle);
-
-		JPanel right = new JPanel();
-		right.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		left.add(changeRoadWeather);
+		left.add(runButton);
+		left.add(stopButton);
+		left.add(ticksLabel);
+		left.add(ticksSpinner);
 
 		this.add(left);
-		this.add(right);
+	}
+
+	private void run_sim(int n) {
+		if (n > 0 && !_stopped) {
+			try {
+				control.run(1);
+				_stopped = false;
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(ControlPanel.this, "Ha habido un error", "Error",
+						JOptionPane.ERROR_MESSAGE);
+				_stopped = true;
+				return;
+			}
+
+			SwingUtilities.invokeLater(new Runnable() { // TODO no se esto no hace nada es copiado y pegado a
+				@Override
+				public void run() {
+					run_sim(n - 1);
+				}
+			});
+
+		} else {
+			enableToolBar(true);
+			_stopped = true;
+		}
+	}
+
+	private void enableToolBar(boolean b) {
+		fileChooser.setEnabled(b);
+		contVehicle.setEnabled(b);
+		changeRoadWeather.setEnabled(b);
+		changeRoadWeather.setEnabled(b);
+	}
+
+	private void stop() {
+		_stopped = true;
+	}
+
+	@Override
+	public void onAdvanceStart(RoadMap map, List<Event> events, int time) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onAdvanceEnd(RoadMap map, List<Event> events, int time) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onEventAdded(RoadMap map, List<Event> events, Event e, int time) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onReset(RoadMap map, List<Event> events, int time) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onRegister(RoadMap map, List<Event> events, int time) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onError(String err) {
+		// TODO Auto-generated method stub
 
 	}
 

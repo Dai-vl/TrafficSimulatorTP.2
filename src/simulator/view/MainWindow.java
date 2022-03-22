@@ -3,16 +3,14 @@ package simulator.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.TitledBorder;
 
 import extra.jtable.EventsTableModel;
 import extra.jtable.JunctionsTableModel;
@@ -25,6 +23,9 @@ public class MainWindow extends JFrame {
 
 	private Controller control;
 
+	static int ancho = java.awt.Toolkit.getDefaultToolkit().getScreenSize().width;
+	static int alto = java.awt.Toolkit.getDefaultToolkit().getScreenSize().height;
+
 	public MainWindow(Controller c) {
 		super("Traffic Simulator");
 		control = c;
@@ -33,6 +34,7 @@ public class MainWindow extends JFrame {
 	}
 
 	private void initGUI() {
+
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		this.setContentPane(mainPanel);
 
@@ -73,30 +75,18 @@ public class MainWindow extends JFrame {
 
 		JPanel mapView = createViewPanel(new MapComponent(control), "Map");
 		mapView.setPreferredSize(new Dimension(500, 400));
+		mapView.add(new MapByRoadComponent(control));
 		mapsPanel.add(mapView);
 
-		// TODO add a map for MapByRoadComponent
-		// ...
-
-		this.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent we) {
-				int result = JOptionPane.showConfirmDialog(MainWindow.this, "¿Quiere salir?", "Salir del simulador : ",
-						JOptionPane.YES_NO_OPTION);
-				if (result == JOptionPane.YES_OPTION)
-					System.exit(0);
-				else if (result == JOptionPane.NO_OPTION)
-					MainWindow.this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-			}
-		});
-
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.pack();
+		this.setLocation(ancho / 2 - this.getWidth() / 2, alto / 2 - this.getHeight() / 2);
 		this.setVisible(true);
-
 	}
 
 	private JPanel createViewPanel(JComponent c, String title) {
 		JPanel p = new JPanel(new BorderLayout());
-		// TODO add a framed border to p with title
+		p.setBorder(new TitledBorder(title));
 		p.add(new JScrollPane(c));
 		return p;
 	}

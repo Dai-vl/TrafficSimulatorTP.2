@@ -1,5 +1,6 @@
 package simulator.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -11,27 +12,29 @@ public class TrafficSimulator implements Observable<TrafficSimObserver> {
 	private RoadMap roads;
 	private List<Event> events;
 	private int time;
+	private List<TrafficSimObserver> observers;
 
 	public TrafficSimulator() {
 		events = new SortedArrayList<Event>();
 		roads = new RoadMap();
 		time = 0;
+		observers = new ArrayList<TrafficSimObserver>();
 	}
 
 	public void addEvent(Event e) {
 		events.add(e);
-		onEventAdded();
-	}
 
-	private void onEventAdded() {
-		// TODO Auto-generated method stub
-
+		for (TrafficSimObserver t : observers) {
+			t.onEventAdded(roads, events, e, time);
+		}
 	}
 
 	public void advance() {
 		time += 1;
 
-		onAdvanceStart();
+		for (TrafficSimObserver t : observers) {
+			t.onAdvanceStart(roads, events, time);
+		}
 
 		List<Event> toRemove = new SortedArrayList<Event>();
 
@@ -52,27 +55,18 @@ public class TrafficSimulator implements Observable<TrafficSimObserver> {
 			r.advance(time);
 		}
 
-		onAdvanceEnd();
-	}
-
-	private void onAdvanceEnd() {
-
-	}
-
-	private void onAdvanceStart() {
-
+		for (TrafficSimObserver t : observers) {
+			t.onAdvanceEnd(roads, events, time);
+		}
 	}
 
 	public void reset() {
 		roads.reset();
 		events.clear();
 		time = 0;
-		onReset();
-	}
-
-	private void onReset() {
-		// TODO Auto-generated method stub
-
+		for (TrafficSimObserver t : observers) {
+			t.onReset(roads, events, time);
+		}
 	}
 
 	public JSONObject report() {
@@ -84,20 +78,14 @@ public class TrafficSimulator implements Observable<TrafficSimObserver> {
 
 	@Override
 	public void addObserver(TrafficSimObserver o) {
-		onRegister();
-	}
-
-	private void onRegister() {
-		// TODO Auto-generated method stub
-
+		observers.add(o);
+		for (TrafficSimObserver t : observers) {
+			t.onRegister(roads, events, time);
+		}
 	}
 
 	@Override
 	public void removeObserver(TrafficSimObserver o) {
-
-	}
-
-	void onError() {
-
+		observers.remove(o);
 	}
 }

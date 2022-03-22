@@ -11,7 +11,7 @@ public class SetContClassEvent extends Event {
 	public SetContClassEvent(int time, List<Pair<String, Integer>> cs) {
 		super(time);
 		if (cs == null)
-			throw new IllegalArgumentException("ERROR en constructor NewSetContClassEvent: cs es null");
+			throw new IllegalArgumentException("ERROR en constructor SetContClassEvent: cs es null");
 		this.cs = cs;
 	}
 
@@ -20,9 +20,14 @@ public class SetContClassEvent extends Event {
 			try {
 				map.getVehicle(p.getFirst()).setContClass(p.getSecond());
 			} catch (IllegalArgumentException ie) {
-				System.out.println(ie.getMessage() + " NewSetContClassEvent: No Existe vehiculo \n");
+				throw new IllegalArgumentException(ie.getMessage() + " SetContClassEvent: No Existe vehiculo \n");
 			}
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "Change CO2 class: " + cs.get(0).getFirst().toString() + ' ' + cs.get(0).getSecond().toString();
 	}
 
 }

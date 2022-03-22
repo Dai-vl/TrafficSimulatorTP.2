@@ -30,7 +30,7 @@ public class NewVehicleEvent extends Event {
 			v.moveToNextRoad();
 			map.addVehicle(v);
 		} catch (IllegalArgumentException ie) {
-			System.out.println(ie.getMessage() + " NewCityRoadEvent: addJunction \n");
+			throw new IllegalArgumentException(ie.getMessage() + " NewCityRoadEvent: addJunction \n");
 		}
 	}
 

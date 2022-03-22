@@ -75,15 +75,23 @@ public class Controller {
 
 	}
 
-	void addObserver(TrafficSimObserver o) {
+	public void run(int n) {
+		// TODO
+		for (int i = 0; i < n; i++) {
+			ts.advance();
+		}
+
+	}
+
+	public void addObserver(TrafficSimObserver o) {
 		ts.addObserver(o);
 	}
 
-	void removeObserver(TrafficSimObserver o) {
+	public void removeObserver(TrafficSimObserver o) {
 		ts.removeObserver(o);
 	}
 
-	void addEvent(Event e) {
+	public void addEvent(Event e) {
 		ts.addEvent(e);
 	}
 
