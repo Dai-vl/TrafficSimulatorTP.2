@@ -1,12 +1,16 @@
-package extra.jtable;
+package simulator.view;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
 import simulator.control.Controller;
+import simulator.model.Event;
+import simulator.model.RoadMap;
+import simulator.model.TrafficSimObserver;
 
-public class EventsTableModel extends AbstractTableModel {
+public class EventsTableModel extends AbstractTableModel implements TrafficSimObserver {
 
 	/**
 	 * 
@@ -15,16 +19,17 @@ public class EventsTableModel extends AbstractTableModel {
 
 	private Controller control;
 
-	private List<EventEx> _events;
-	private String[] _colNames = { "#", "Time", "Priority" };
+	private List<Event> _events;
+	private String[] _colNames = { "Time", "Desc." };
 
 	public EventsTableModel() {
-		_events = null;
+		_events = new ArrayList<Event>();
 	}
 
 	public EventsTableModel(Controller c) {
 		control = c;
-		_events = null;
+		_events = new ArrayList<Event>();
+		control.addObserver(this);
 	}
 
 	public void update() {
@@ -34,10 +39,10 @@ public class EventsTableModel extends AbstractTableModel {
 
 		// We need to notify changes, otherwise the table does not refresh.
 		fireTableDataChanged();
-		;
+
 	}
 
-	public void setEventsList(List<EventEx> events) {
+	public void setEventsList(List<Event> events) {
 		_events = events;
 		update();
 	}
@@ -82,15 +87,43 @@ public class EventsTableModel extends AbstractTableModel {
 		Object s = null;
 		switch (columnIndex) {
 		case 0:
-			s = rowIndex;
-			break;
-		case 1:
 			s = _events.get(rowIndex).getTime();
 			break;
-		case 2:
-			s = _events.get(rowIndex).getPriority();
+		case 1:
+			s = _events.get(rowIndex).toString();
 			break;
 		}
 		return s;
+	}
+
+	@Override
+	public void onAdvanceStart(RoadMap map, List<Event> events, int time) {
+
+	}
+
+	@Override
+	public void onAdvanceEnd(RoadMap map, List<Event> events, int time) {
+		this.setEventsList(events);
+	}
+
+	@Override
+	public void onEventAdded(RoadMap map, List<Event> events, Event e, int time) {
+		this.setEventsList(events);
+	}
+
+	@Override
+	public void onReset(RoadMap map, List<Event> events, int time) {
+		_events.clear();
+		this.setEventsList(events);
+	}
+
+	@Override
+	public void onRegister(RoadMap map, List<Event> events, int time) {
+		// TODO al igual hay que añadir events aqui ?
+	}
+
+	@Override
+	public void onError(String err) {
+
 	}
 }

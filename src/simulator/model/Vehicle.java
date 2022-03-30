@@ -149,4 +149,8 @@ public class Vehicle extends SimulatedObject {
 			return 0;
 		}
 	}
+
+	public String getLocationToString() {
+		return road.getId() + ": " + location;
+	}
 }

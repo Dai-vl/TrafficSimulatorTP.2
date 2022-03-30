@@ -127,8 +127,24 @@ public class Junction extends SimulatedObject {
 		return currGreen;
 	}
 
+	public String getGreenRoad() {
+		if (currGreen == -1)
+			return "NONE";
+		else
+			return incomingRoad.get(currGreen).getId();
+	}
+
 	public List<Road> getInRoads() {
 		return Collections.unmodifiableList(incomingRoad);
+	}
+
+	public String getQueue() {
+		String str = "";
+		for (Road r : incomingRoad) {
+			str += r.getId() + ": " + roadQueue.get(r) + " ";
+		}
+
+		return str;
 	}
 
 }
