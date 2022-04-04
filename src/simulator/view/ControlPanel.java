@@ -30,7 +30,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 
 	private Controller control;
 	private boolean _stopped = false;
-	private JButton fileChooser, contVehicle, changeRoadWeather, runButton, stopButton;
+	private JButton fileChooser, contVehicle, changeRoadWeather, runButton, stopButton, resetButton;
 	private JLabel ticksLabel;
 	private JSpinner ticksSpinner;
 
@@ -123,6 +123,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				enableToolBar(false);
+				_stopped = false;
 				run_sim((Integer) ticksSpinner.getValue());
 			}
 
@@ -133,6 +134,19 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				stop();
+			}
+
+		});
+
+		resetButton = new JButton();
+		resetButton.setIcon(new ImageIcon("resources/icons/restart.png"));
+		resetButton.setContentAreaFilled(false);
+		resetButton.setBorder(BorderFactory.createEtchedBorder(1));
+		resetButton.setToolTipText("Restart Traffic Simulator");
+		resetButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				control.reset();
 			}
 
 		});
@@ -176,6 +190,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		left.add(changeRoadWeather);
 		left.add(runButton);
 		left.add(stopButton);
+		left.add(resetButton);
 		left.add(ticksLabel);
 		left.add(ticksSpinner);
 
@@ -186,7 +201,6 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		if (n > 0 && !_stopped) {
 			try {
 				control.run(1);
-				_stopped = false;
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(ControlPanel.this, "Ha habido un error", "Error",
 						JOptionPane.ERROR_MESSAGE);
@@ -194,7 +208,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 				return;
 			}
 
-			SwingUtilities.invokeLater(new Runnable() { // TODO no se esto no hace nada es copiado y pegado a
+			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
 					run_sim(n - 1);
@@ -212,6 +226,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		contVehicle.setEnabled(b);
 		changeRoadWeather.setEnabled(b);
 		changeRoadWeather.setEnabled(b);
+		resetButton.setEnabled(b);
 	}
 
 	private void stop() {
