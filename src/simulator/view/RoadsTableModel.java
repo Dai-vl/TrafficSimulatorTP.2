@@ -105,7 +105,7 @@ public class RoadsTableModel extends AbstractTableModel implements TrafficSimObs
 
 	@Override
 	public void onReset(RoadMap map, List<Event> events, int time) {
-		_roads.clear();
+		// _roads.clear();
 		setRoadsList(map.getRoads());
 
 	}

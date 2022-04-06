@@ -129,14 +129,19 @@ public class MapByRoadComponent extends JComponent implements TrafficSimObserver
 		switch (w) {
 		case SUNNY:
 			image = loadImage("sun.png");
+			break;
 		case CLOUDY:
 			image = loadImage("cloud.png");
+			break;
 		case RAINY:
 			image = loadImage("rain.png");
+			break;
 		case WINDY:
 			image = loadImage("wind.png");
+			break;
 		case STORM:
 			image = loadImage("storm.png");
+			break;
 		}
 		g.drawImage(image, x, y - 12, 32, 32, this);
 	}

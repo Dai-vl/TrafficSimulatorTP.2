@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -18,18 +19,26 @@ import javax.swing.JSpinner;
 
 import simulator.control.Controller;
 import simulator.misc.Pair;
+import simulator.model.Event;
 import simulator.model.Road;
+import simulator.model.RoadMap;
 import simulator.model.SetWeatherEvent;
+import simulator.model.TrafficSimObserver;
 import simulator.model.Weather;
 
 @SuppressWarnings("serial")
-public class ChangeWeatherDialog extends JDialog {
+public class ChangeWeatherDialog extends JDialog implements TrafficSimObserver {
 
 	private Controller control;
+
+	private JComboBox<String> roads;
+	private int _time;
 
 	ChangeWeatherDialog(Frame p, Controller control) {
 		super(p, "Change CO2 Class", true);
 		this.control = control;
+		_time = 0;
+		control.addObserver(this);
 		initGUI();
 	}
 
@@ -50,8 +59,8 @@ public class ChangeWeatherDialog extends JDialog {
 		JLabel weatherLabel = new JLabel("Weather:");
 		JLabel ticksLabel = new JLabel("Ticks:");
 
-		JComboBox<Road> roads = new JComboBox<Road>(); // TODO
 		roads.setPreferredSize(new Dimension(60, 20));
+
 		JComboBox<Weather> weatherSpinner = new JComboBox<Weather>(Weather.values());
 		JSpinner ticksSpinner = new JSpinner();
 		ticksSpinner.setPreferredSize(new Dimension(60, 20));
@@ -83,8 +92,8 @@ public class ChangeWeatherDialog extends JDialog {
 				List<Pair<String, Weather>> l = new ArrayList<>();
 				l.add(new Pair<String, Weather>(roads.getSelectedItem().toString(),
 						(Weather) weatherSpinner.getSelectedItem()));
-				// TODO get time para sumarselo a los ticks
-				control.addEvent(new SetWeatherEvent((Integer) ticksSpinner.getValue(), l));
+
+				control.addEvent(new SetWeatherEvent((Integer) ticksSpinner.getValue() + _time, l));
 				ChangeWeatherDialog.this.dispose();
 			}
 
@@ -102,4 +111,54 @@ public class ChangeWeatherDialog extends JDialog {
 		this.setVisible(true);
 
 	}
+
+	private void updateRoads(RoadMap map) {
+		String[] roads = new String[map.getRoads().size()];
+		List<Road> r = map.getRoads();
+
+		for (int i = 0; i < r.size(); ++i) {
+			roads[i] = r.get(i).getId();
+		}
+
+		updateModel(roads);
+	}
+
+	private void updateModel(String[] r) {
+		roads = new JComboBox<String>();
+		roads.setModel(new DefaultComboBoxModel<String>(r));
+	}
+
+	@Override
+	public void onAdvanceStart(RoadMap map, List<Event> events, int time) {
+	}
+
+	@Override
+	public void onAdvanceEnd(RoadMap map, List<Event> events, int time) {
+		_time = time;
+		updateRoads(map);
+	}
+
+	@Override
+	public void onEventAdded(RoadMap map, List<Event> events, Event e, int time) {
+		_time = time;
+		updateRoads(map);
+	}
+
+	@Override
+	public void onReset(RoadMap map, List<Event> events, int time) {
+		_time = time;
+		updateRoads(map);
+	}
+
+	@Override
+	public void onRegister(RoadMap map, List<Event> events, int time) {
+		_time = time;
+		updateRoads(map);
+	}
+
+	@Override
+	public void onError(String err) {
+
+	}
+
 }

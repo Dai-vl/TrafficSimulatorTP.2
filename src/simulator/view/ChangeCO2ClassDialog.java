@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -19,16 +20,24 @@ import javax.swing.SpinnerNumberModel;
 
 import simulator.control.Controller;
 import simulator.misc.Pair;
+import simulator.model.Event;
+import simulator.model.RoadMap;
 import simulator.model.SetContClassEvent;
+import simulator.model.TrafficSimObserver;
 import simulator.model.Vehicle;
 
 @SuppressWarnings("serial")
-public class ChangeCO2ClassDialog extends JDialog {
+public class ChangeCO2ClassDialog extends JDialog implements TrafficSimObserver {
 	private Controller control;
+
+	private JComboBox<String> vehicles;
+	private int _time;
 
 	ChangeCO2ClassDialog(Frame p, Controller control) {
 		super(p, "Change CO2 Class", true);
 		this.control = control;
+		_time = 0;
+		control.addObserver(this);
 		initGUI();
 	}
 
@@ -49,10 +58,11 @@ public class ChangeCO2ClassDialog extends JDialog {
 		JLabel co2Label = new JLabel("CO2 Class:");
 		JLabel ticksLabel = new JLabel("Ticks:");
 
-		JComboBox<Vehicle> vehicles = new JComboBox<Vehicle>(); // TODO
 		vehicles.setPreferredSize(new Dimension(60, 20));
-		JSpinner co2Spinner = new JSpinner(new SpinnerNumberModel(0.0, 0.0, 10.0, 1.0));
+
+		JSpinner co2Spinner = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
 		co2Spinner.setPreferredSize(new Dimension(60, 20));
+
 		JSpinner ticksSpinner = new JSpinner();
 		ticksSpinner.setPreferredSize(new Dimension(60, 20));
 
@@ -82,10 +92,12 @@ public class ChangeCO2ClassDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				List<Pair<String, Integer>> l = new ArrayList<>();
+
 				l.add(new Pair<String, Integer>(vehicles.getSelectedItem().toString(),
 						(Integer) co2Spinner.getValue()));
+
 				// TODO get time para sumarselo a los ticks
-				control.addEvent(new SetContClassEvent((Integer) ticksSpinner.getValue(), l));
+				control.addEvent(new SetContClassEvent((Integer) ticksSpinner.getValue() + _time, l));
 				ChangeCO2ClassDialog.this.dispose();
 			}
 
@@ -101,5 +113,54 @@ public class ChangeCO2ClassDialog extends JDialog {
 		this.pack();
 		this.setLocation(MainWindow.ancho / 2 - this.getWidth() / 2, MainWindow.alto / 2 - this.getHeight() / 2);
 		this.setVisible(true);
+	}
+
+	@Override
+	public void onAdvanceStart(RoadMap map, List<Event> events, int time) {
+
+	}
+
+	@Override
+	public void onAdvanceEnd(RoadMap map, List<Event> events, int time) {
+		_time = time;
+		updateVehicles(map);
+	}
+
+	@Override
+	public void onEventAdded(RoadMap map, List<Event> events, Event e, int time) {
+		_time = time;
+		updateVehicles(map);
+	}
+
+	@Override
+	public void onReset(RoadMap map, List<Event> events, int time) {
+		_time = time;
+		updateVehicles(map);
+	}
+
+	@Override
+	public void onRegister(RoadMap map, List<Event> events, int time) {
+		_time = time;
+		updateVehicles(map);
+	}
+
+	@Override
+	public void onError(String err) {
+	}
+
+	private void updateVehicles(RoadMap map) {
+		String[] vehicles = new String[map.getVehicles().size()];
+		List<Vehicle> v = map.getVehicles();
+
+		for (int i = 0; i < v.size(); ++i) {
+			vehicles[i] = v.get(i).getId();
+		}
+
+		updateModel(vehicles);
+	}
+
+	private void updateModel(String[] v) {
+		vehicles = new JComboBox<String>();
+		vehicles.setModel(new DefaultComboBoxModel<String>(v));
 	}
 }

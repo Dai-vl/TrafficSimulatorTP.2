@@ -76,7 +76,6 @@ public class Controller {
 	}
 
 	public void run(int n) {
-		// TODO
 		for (int i = 0; i < n; i++) {
 			ts.advance();
 		}
@@ -92,6 +91,10 @@ public class Controller {
 	}
 
 	public void addEvent(Event e) {
+		ts.addEvent(e);
+	}
+
+	public void addUsersEvent(Event e) {
 		ts.addEvent(e);
 	}
 

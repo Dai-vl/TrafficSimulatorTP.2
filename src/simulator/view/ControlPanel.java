@@ -30,7 +30,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 
 	private Controller control;
 	private boolean _stopped = false;
-	private JButton fileChooser, contVehicle, changeRoadWeather, runButton, stopButton, resetButton;
+	private JButton fileChooser, contVehicle, changeRoadWeather, runButton, stopButton;
 	private JLabel ticksLabel;
 	private JSpinner ticksSpinner;
 
@@ -138,19 +138,6 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 
 		});
 
-		resetButton = new JButton();
-		resetButton.setIcon(new ImageIcon("resources/icons/restart.png"));
-		resetButton.setContentAreaFilled(false);
-		resetButton.setBorder(BorderFactory.createEtchedBorder(1));
-		resetButton.setToolTipText("Restart Traffic Simulator");
-		resetButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				control.reset();
-			}
-
-		});
-
 		setAppereance();
 	}
 
@@ -190,7 +177,6 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		left.add(changeRoadWeather);
 		left.add(runButton);
 		left.add(stopButton);
-		left.add(resetButton);
 		left.add(ticksLabel);
 		left.add(ticksSpinner);
 
@@ -226,7 +212,6 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		contVehicle.setEnabled(b);
 		changeRoadWeather.setEnabled(b);
 		changeRoadWeather.setEnabled(b);
-		resetButton.setEnabled(b);
 	}
 
 	private void stop() {

@@ -151,6 +151,12 @@ public class Vehicle extends SimulatedObject {
 	}
 
 	public String getLocationToString() {
+		if (status.equals(VehicleStatus.PENDING))
+			return "Pending";
+		else if (status.equals(VehicleStatus.WAITING))
+			return "Waiting: " + itinerary.get(junctionInd).getId();
+		else if (status.equals(VehicleStatus.ARRIVED))
+			return "Arrived";
 		return road.getId() + ": " + location;
 	}
 }

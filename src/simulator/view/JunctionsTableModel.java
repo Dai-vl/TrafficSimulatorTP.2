@@ -92,7 +92,7 @@ public class JunctionsTableModel extends AbstractTableModel implements TrafficSi
 
 	@Override
 	public void onReset(RoadMap map, List<Event> events, int time) {
-		_junctions.clear();
+		// _junctions.clear();
 		setJunctionsList(map.getJunctions());
 	}
 

@@ -18,7 +18,7 @@ public class StatusBar extends JPanel implements TrafficSimObserver {
 	private Controller control;
 	private int time;
 	private JLabel message, timeL;
-	private String timeS = "Time: ", eventS = "Event added: ";
+	private final String timeS = "Time: ", eventS = "Event added: ";
 
 	StatusBar(Controller c) {
 		control = c;
@@ -45,7 +45,7 @@ public class StatusBar extends JPanel implements TrafficSimObserver {
 
 	@Override
 	public void onAdvanceEnd(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
+		updateLabels(null, time);
 
 	}
 
@@ -56,20 +56,22 @@ public class StatusBar extends JPanel implements TrafficSimObserver {
 
 	@Override
 	public void onReset(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
+		updateLabels(null, time);
 
 	}
 
 	@Override
 	public void onRegister(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onError(String err) {
-		// TODO Auto-generated method stub
 
+	}
+
+	private void updateTime(int time) {
+		timeL.setText(timeS + String.valueOf(time));
 	}
 
 	private void updateLabels(Event e, int time) {
@@ -79,7 +81,7 @@ public class StatusBar extends JPanel implements TrafficSimObserver {
 			message.setText(eventS + e.toString());
 			message.setVisible(true);
 		}
-		timeL.setText(timeS + String.valueOf(time));
+		updateTime(time);
 	}
 
 }
