@@ -29,17 +29,17 @@ public class RoadMap {
 
 	void addJunction(Junction j) {
 		if (juncMap.containsKey(j._id))
-			throw new IllegalArgumentException("Not valid junction: in addJunction (ID)");
+			throw new IllegalArgumentException("Not valid junction: " + j.getId());
 		junctions.add(j);
 		juncMap.put(j._id, j);
 	}
 
 	void addRoad(Road r) {
 		if (roadMap.containsKey(r._id))
-			throw new IllegalArgumentException("Not valid junction: in addRoad (ID)");
+			throw new IllegalArgumentException("Not valid road: " + r.getId());
 
 		if (!juncMap.containsValue(r.getSrc()) || !juncMap.containsValue(r.getDest()))
-			throw new IllegalArgumentException("Not valid junction: in addRoad (cruce conecta carretera)");
+			throw new IllegalArgumentException("Not valid road: " + r.getId() + " the junctions are not defined");
 
 		roads.add(r);
 		roadMap.put(r._id, r);
@@ -47,13 +47,14 @@ public class RoadMap {
 
 	void addVehicle(Vehicle v) {
 		if (vehicleMap.containsKey(v._id))
-			throw new IllegalArgumentException("Not valid junction: in addVehicle (ID)");
+			throw new IllegalArgumentException("Not valid vehicle: the vehicle " + v.getId() + " already exists");
 
 		Junction previous = v.getItinerary().get(0);
 		for (Junction current : v.getItinerary()) {
 			if (previous != current) {
 				if (previous.roadTo(current) == null)
-					throw new IllegalArgumentException("Not valid junction: in addRoad (cruce conecta carretera)");
+					throw new IllegalArgumentException("Not valid junction: there is no road that connects "
+							+ previous.getId() + " and " + current.getId());
 			}
 			previous = current;
 		}

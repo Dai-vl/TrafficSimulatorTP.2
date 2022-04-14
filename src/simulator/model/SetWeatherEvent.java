@@ -10,19 +10,15 @@ public class SetWeatherEvent extends Event {
 
 	public SetWeatherEvent(int time, List<Pair<String, Weather>> ws) {
 		super(time);
-		if (ws == null)
-			throw new IllegalArgumentException("ERROR en SetWeatherEvent constructor: ws es null");
+		if (ws == null || ws.isEmpty())
+			throw new IllegalArgumentException("SetWeatherEvent constructor: the info in this event is null");
 		this.ws = ws;
 	}
 
 	@Override
 	void execute(RoadMap map) {
 		for (Pair<String, Weather> p : ws) {
-			try {
-				map.getRoad(p.getFirst()).setWeather(p.getSecond());
-			} catch (IllegalArgumentException ie) {
-				throw new IllegalArgumentException(ie.getMessage() + " SetWeatherEvent: No Existe Carretera \n");
-			}
+			map.getRoad(p.getFirst()).setWeather(p.getSecond());
 		}
 
 	}
@@ -30,7 +26,6 @@ public class SetWeatherEvent extends Event {
 	@Override
 	public String toString() {
 		return "Change weather road: " + ws.get(0).getFirst().toString() + ' ' + ws.get(0).getSecond().toString();
-		// TODO pasar el array entero (en set cont class tb)
 	}
 
 }

@@ -111,12 +111,12 @@ public class Main {
 		}
 	}
 
-	private static void parseOutFileOption(CommandLine line) throws ParseException {
+	private static void parseOutFileOption(CommandLine line) {
 		if (_mode.equals("console"))
 			_outFile = line.getOptionValue("o");
 	}
 
-	private static void parseTicksOption(CommandLine line) throws ParseException {
+	private static void parseTicksOption(CommandLine line) {
 		if (line.getOptionValue("t") == null) {
 			_n = _timeLimitDefaultValue;
 		} else {
@@ -124,7 +124,7 @@ public class Main {
 		}
 	}
 
-	private static void parseModeOption(CommandLine line) throws ParseException {
+	private static void parseModeOption(CommandLine line) {
 		if (line.getOptionValue("m") == null) {
 			_mode = "gui";
 		} else {

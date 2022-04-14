@@ -7,7 +7,7 @@ public abstract class Event implements Comparable<Event> {
 	Event() {
 	};
 
-	Event(int time) {
+	Event(int time) throws IllegalArgumentException {
 		if (time < 1)
 			throw new IllegalArgumentException("Time must be positive (" + time + ")");
 		_time = time;

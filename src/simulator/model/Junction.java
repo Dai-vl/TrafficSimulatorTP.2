@@ -20,16 +20,17 @@ public class Junction extends SimulatedObject {
 	private LightSwitchingStrategy lsStrategy;
 	private DequeuingStrategy dqStrategy;
 
-	public Junction(String id, LightSwitchingStrategy lsStrategy, DequeuingStrategy dqStrategy, int xCoor, int yCoor) {
+	public Junction(String id, LightSwitchingStrategy lsStrategy, DequeuingStrategy dqStrategy, int xCoor, int yCoor)
+			throws IllegalArgumentException {
 		super(id);
 		if (lsStrategy == null)
-			throw new IllegalArgumentException("Constructor Junction no valido: lsStrategy es null");
+			throw new IllegalArgumentException("Constructor Junction not valid: lsStrategy is null");
 		if (dqStrategy == null)
-			throw new IllegalArgumentException("Constructor Junction no valido: dqStratey es null");
+			throw new IllegalArgumentException("Constructor Junction not valid: dqStratey is null");
 		if (xCoor < 0)
-			throw new IllegalArgumentException("Constructor Junction no valido: coordenada x negativa");
+			throw new IllegalArgumentException("Constructor Junction not valid: coordinate x less than 0");
 		if (yCoor < 0)
-			throw new IllegalArgumentException("Constructor Junction no valido: coordenada y negativa");
+			throw new IllegalArgumentException("Constructor Junction not valid: coordinate y less than 0");
 
 		this.lsStrategy = lsStrategy;
 		this.dqStrategy = dqStrategy;
@@ -45,7 +46,7 @@ public class Junction extends SimulatedObject {
 
 	public void addIncommingRoad(Road r) throws IllegalArgumentException {
 		if (!r.getDest().equals(this))
-			throw new IllegalArgumentException("Not valid Road: in addIncommingRoad");
+			throw new IllegalArgumentException("Not valid Road: " + r.getId());
 
 		incomingRoad.add(r);
 		List<Vehicle> auxList = new LinkedList<>();
@@ -55,7 +56,7 @@ public class Junction extends SimulatedObject {
 
 	public void addOutgoingRoad(Road r) throws IllegalArgumentException {
 		if (!r.getSrc().equals(this) || outgoingRoad.containsKey(r.getDest()))
-			throw new IllegalArgumentException("Not valid Road: in addOutgoingRoad");
+			throw new IllegalArgumentException("Not valid Road: " + r.getId());
 
 		outgoingRoad.put(r.getDest(), r);
 	}
@@ -66,6 +67,8 @@ public class Junction extends SimulatedObject {
 	}
 
 	public Road roadTo(Junction j) {
+		if (outgoingRoad.get(j) == null)
+			throw new IllegalArgumentException("There is no outgoing road in junction " + j.getId());
 		return outgoingRoad.get(j);
 	}
 

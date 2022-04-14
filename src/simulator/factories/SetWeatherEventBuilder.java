@@ -11,7 +11,7 @@ import simulator.model.Event;
 import simulator.model.SetWeatherEvent;
 import simulator.model.Weather;
 
-public class SetWeatherEventBuilder extends Builder<Event>{
+public class SetWeatherEventBuilder extends Builder<Event> {
 
 	public SetWeatherEventBuilder() {
 		super("set_weather");
@@ -20,13 +20,20 @@ public class SetWeatherEventBuilder extends Builder<Event>{
 	protected Event createTheInstance(JSONObject data) {
 		int time = data.getInt("time");
 		JSONArray ws = data.getJSONArray("info");
-		List<Pair<String,Weather>> w = new ArrayList<>();
+		List<Pair<String, Weather>> w = new ArrayList<>();
 		JSONObject aux;
-		for(int i = 0; i < ws.length(); i++) {
+		for (int i = 0; i < ws.length(); i++) {
 			aux = ws.getJSONObject(i);
-			w.add(new Pair<String, Weather>(aux.getString("road"), Weather.valueOf(aux.getString("weather"))));
+			if (aux.getString("road").isEmpty())
+				throw new IllegalArgumentException("In the set weather event, road can not be empty");
+			try {
+				w.add(new Pair<String, Weather>(aux.getString("road"), Weather.valueOf(aux.getString("weather"))));
+			} catch (Exception e) {
+				throw new IllegalArgumentException("In the set weather event weather is not valid");
+			} // TODO he cambiado esto
+
 		}
-		
+
 		return new SetWeatherEvent(time, w);
 	}
 

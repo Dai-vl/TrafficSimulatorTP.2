@@ -23,7 +23,13 @@ public class SetContClassEventBuilder extends Builder<Event> {
 		JSONObject aux;
 		for (int i = 0; i < ws.length(); i++) {
 			aux = ws.getJSONObject(i);
-			w.add(new Pair<String, Integer>(aux.getString("vehicle"), aux.getInt("class")));
+			if (aux.getString("vehicle").isEmpty())
+				throw new IllegalArgumentException("In the set contamination event, vehicle can not be empty");
+			try {
+				w.add(new Pair<String, Integer>(aux.getString("vehicle"), aux.getInt("class")));
+			} catch (Exception e) {
+				throw new IllegalArgumentException("In the set contamination event class is not valid");
+			} // TODO he cambiado esto
 		}
 
 		return new SetContClassEvent(time, w);

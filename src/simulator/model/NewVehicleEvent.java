@@ -19,19 +19,15 @@ public class NewVehicleEvent extends Event {
 	}
 
 	void execute(RoadMap map) {
-		try {
-			List<Junction> aux = new ArrayList<>();
+		List<Junction> aux = new ArrayList<>();
 
-			for (int i = 0; i < itinerary.size(); i++) {
-				aux.add(map.getJunction(itinerary.get(i)));
-			}
-
-			Vehicle v = new Vehicle(id, maxSpeed, contClass, aux);
-			v.moveToNextRoad();
-			map.addVehicle(v);
-		} catch (IllegalArgumentException ie) {
-			throw new IllegalArgumentException(ie.getMessage() + " NewCityRoadEvent: addJunction \n");
+		for (int i = 0; i < itinerary.size(); i++) {
+			aux.add(map.getJunction(itinerary.get(i)));
 		}
+
+		Vehicle v = new Vehicle(id, maxSpeed, contClass, aux);
+		v.moveToNextRoad();
+		map.addVehicle(v);
 	}
 
 	@Override

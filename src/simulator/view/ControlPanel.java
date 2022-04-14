@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import simulator.control.Controller;
 import simulator.model.Event;
@@ -57,7 +58,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int result = JOptionPane.showConfirmDialog((Frame) SwingUtilities.getWindowAncestor(ControlPanel.this),
-						"¿Quiere salir?", "Salir del simulador : ", JOptionPane.YES_NO_OPTION);
+						"Do you want to exit?", "Exit simulator: ", JOptionPane.YES_NO_OPTION);
 				if (result == JOptionPane.YES_OPTION)
 					System.exit(0);
 
@@ -76,7 +77,8 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		fileChooser = new JButton();
 		fileChooser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fc = new JFileChooser();
+				JFileChooser fc = new JFileChooser("resources/examples");
+				fc.setFileFilter(new FileNameExtensionFilter("JSON File", "json"));
 				int seleccion = fc.showOpenDialog(ControlPanel.this);
 				if (seleccion == JFileChooser.APPROVE_OPTION) {
 					control.reset();
@@ -84,14 +86,14 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 					try {
 						in = new FileInputStream(fc.getSelectedFile());
 						control.loadEvents(in);
-					} catch (Exception e1) {
+					} catch (Exception ex) {
 						JOptionPane.showMessageDialog((Frame) SwingUtilities.getWindowAncestor(ControlPanel.this),
-								"No se ha podido abrir el archivo", "Error", JOptionPane.ERROR_MESSAGE);
+								ex.getMessage(), "Error in file", JOptionPane.ERROR_MESSAGE);
 					}
 
 				} else if (seleccion == JFileChooser.ERROR_OPTION) {
 					JOptionPane.showMessageDialog((Frame) SwingUtilities.getWindowAncestor(ControlPanel.this),
-							"Ha habido un error", "Error", JOptionPane.ERROR_MESSAGE);
+							"An error occurred", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 
@@ -99,6 +101,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 
 		contVehicle = new JButton();
 		contVehicle.addActionListener(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new ChangeCO2ClassDialog((Frame) SwingUtilities.getWindowAncestor(ControlPanel.this), control);
@@ -188,8 +191,9 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 			try {
 				control.run(1);
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(ControlPanel.this, "Ha habido un error", "Error",
-						JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog((Frame) SwingUtilities.getWindowAncestor(ControlPanel.this),
+						"An error occurred while running, stopping the simulation", "Error",
+						JOptionPane.WARNING_MESSAGE);
 				_stopped = true;
 				return;
 			}
@@ -220,38 +224,28 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 
 	@Override
 	public void onAdvanceStart(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onAdvanceEnd(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onEventAdded(RoadMap map, List<Event> events, Event e, int time) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onReset(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onRegister(RoadMap map, List<Event> events, int time) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void onError(String err) {
-		// TODO Auto-generated method stub
-
+		JOptionPane.showMessageDialog((Frame) SwingUtilities.getWindowAncestor(ControlPanel.this), err, "Error",
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 }

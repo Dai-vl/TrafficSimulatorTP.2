@@ -21,8 +21,13 @@ public class Vehicle extends SimulatedObject {
 
 	Vehicle(String id, int maxSpeed, int contClass, List<Junction> itinerary) throws IllegalArgumentException {
 		super(id);
-		if (maxSpeed <= 0 || contClass < 0 || contClass > 10 || itinerary.size() < 2)
-			throw new IllegalArgumentException("ERROR!");
+		if (maxSpeed <= 0)
+			throw new IllegalArgumentException("Max Speed in class Vehicle must be greater than 0. Vehicle: " + id);
+		if (contClass < 0 || contClass > 10)
+			throw new IllegalArgumentException(
+					"Cont class in class Vehicle must be positive and smaller than 10. Vehicle: " + id);
+		if (itinerary.size() < 2)
+			throw new IllegalArgumentException("Itinerary in class Vehicle must be longer than 2. Vehicle: " + id);
 		this.maxSpeed = maxSpeed;
 		this.contClass = contClass;
 		this.itinerary = Collections.unmodifiableList(new ArrayList<>(itinerary));
@@ -40,7 +45,7 @@ public class Vehicle extends SimulatedObject {
 
 	void setSpeed(int s) throws IllegalArgumentException {
 		if (s < 0)
-			throw new IllegalArgumentException("ERROR!");
+			throw new IllegalArgumentException("Speed in class vehicle must be greater than 0. Vehicle: " + _id);
 		if (VehicleStatus.TRAVELING.equals(status))
 			this.actSpeed = min(s, maxSpeed);
 	}
@@ -49,17 +54,22 @@ public class Vehicle extends SimulatedObject {
 		if (c >= 0 && c <= 10)
 			this.contClass = c;
 		else
-			throw new IllegalArgumentException("ERROR!");
+			throw new IllegalArgumentException(
+					"Cont class in class Vehicle must be positive and smaller than 10. Vehicle: " + _id);
 	}
 
 	void moveToNextRoad() throws IllegalArgumentException {
 		if (!VehicleStatus.PENDING.equals(status) && !VehicleStatus.WAITING.equals(status))
-			throw new IllegalArgumentException("moveToNextRoad: Vehicle");
+			throw new IllegalArgumentException(
+					"A vehicle can't move to the next road if it's not pending or waiting. Vehicle: " + _id);
 
 		if (!VehicleStatus.PENDING.equals(status))
 			road.exit(this);
 
 		if (junctionInd < itinerary.size() - 1) {
+			if (itinerary.get(junctionInd) == null || itinerary.get(junctionInd + 1) == null)
+				throw new IllegalArgumentException(
+						"The vehicle's itinerary can not have empty elements. Vehicle: " + _id);
 			road = itinerary.get(junctionInd).roadTo(itinerary.get(junctionInd + 1));
 			location = 0;
 			this.setSpeed(0);

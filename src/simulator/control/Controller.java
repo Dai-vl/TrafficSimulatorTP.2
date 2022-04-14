@@ -22,9 +22,9 @@ public class Controller {
 
 	public Controller(TrafficSimulator sim, Factory<Event> eventsFactory) {
 		if (sim.equals(null))
-			throw new IllegalArgumentException("Traffic Simulator con valor null en controller");
+			throw new IllegalArgumentException("Traffic Simulator with null value in controller");
 		if (eventsFactory.equals(null))
-			throw new IllegalArgumentException("Events Factory con valor null en controller");
+			throw new IllegalArgumentException("Events Factory with null value in controller");
 		ts = sim;
 		ef = eventsFactory;
 	}
@@ -34,19 +34,24 @@ public class Controller {
 	}
 
 	public void loadEvents(InputStream in) throws IOException {
-		JSONObject jo = new JSONObject(new JSONTokener(in));
+		try {
 
-		if (!jo.has("events"))
-			throw new IllegalArgumentException("Input Stream incorrecto");
+			JSONObject jo = new JSONObject(new JSONTokener(in));
 
-		JSONArray events = jo.getJSONArray("events");
+			if (!jo.has("events"))
+				throw new IllegalArgumentException("Incorrect Input Stream");
 
-		for (int i = 0; i < events.length(); i++) {
-			JSONObject e = events.getJSONObject(i);
-			ts.addEvent(ef.createInstance(e));
+			JSONArray events = jo.getJSONArray("events");
+
+			for (int i = 0; i < events.length(); i++) {
+				JSONObject e = events.getJSONObject(i);
+				ts.addEvent(ef.createInstance(e));
+			}
+
+			in.close();
+		} catch (RuntimeException e) {
+			throw new IllegalArgumentException("Error in the in JSON File: " + e.getMessage());
 		}
-
-		in.close();
 	}
 
 	public void run(int n, OutputStream out) {

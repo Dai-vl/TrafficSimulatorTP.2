@@ -96,7 +96,6 @@ public class ChangeCO2ClassDialog extends JDialog implements TrafficSimObserver 
 				l.add(new Pair<String, Integer>(vehicles.getSelectedItem().toString(),
 						(Integer) co2Spinner.getValue()));
 
-				// TODO get time para sumarselo a los ticks
 				control.addEvent(new SetContClassEvent((Integer) ticksSpinner.getValue() + _time, l));
 				ChangeCO2ClassDialog.this.dispose();
 			}

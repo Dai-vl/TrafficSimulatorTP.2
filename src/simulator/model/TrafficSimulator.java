@@ -22,10 +22,18 @@ public class TrafficSimulator implements Observable<TrafficSimObserver> {
 	}
 
 	public void addEvent(Event e) {
-		events.add(e);
+		try {
+			events.add(e);
 
-		for (TrafficSimObserver t : observers) {
-			t.onEventAdded(roads, events, e, time);
+			for (TrafficSimObserver t : observers) {
+				t.onEventAdded(roads, events, e, time);
+			}
+
+		} catch (Exception ex) {
+			for (TrafficSimObserver t : observers) {
+				t.onError(ex.getMessage());
+			}
+			throw ex;
 		}
 	}
 
@@ -38,25 +46,34 @@ public class TrafficSimulator implements Observable<TrafficSimObserver> {
 
 		List<Event> toRemove = new SortedArrayList<Event>();
 
-		for (Event e : events) {
-			if (e._time == time) {
-				e.execute(roads);
-				toRemove.add(e);
+		try {
+			for (Event e : events) {
+				if (e._time == time) {
+					e.execute(roads);
+					toRemove.add(e);
+				}
 			}
-		}
 
-		events.removeAll(toRemove);
+			events.removeAll(toRemove);
 
-		for (Junction j : roads.getJunctions()) {
-			j.advance(time);
-		}
+			for (Junction j : roads.getJunctions()) {
+				j.advance(time);
+			}
 
-		for (Road r : roads.getRoads()) {
-			r.advance(time);
-		}
+			for (Road r : roads.getRoads()) {
+				r.advance(time);
+			}
 
-		for (TrafficSimObserver t : observers) {
-			t.onAdvanceEnd(roads, events, time);
+			for (TrafficSimObserver t : observers) {
+				t.onAdvanceEnd(roads, events, time);
+			}
+
+		} catch (Exception e) {
+			for (TrafficSimObserver t : observers) {
+				t.onError(e.getMessage());
+			}
+			e.printStackTrace();
+			throw e;
 		}
 	}
 

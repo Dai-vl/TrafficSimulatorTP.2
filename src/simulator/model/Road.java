@@ -22,8 +22,18 @@ public abstract class Road extends SimulatedObject {
 	public Road(String id, Junction srcJunc, Junction destJunc, int maxSpeed, int contLimit, int length,
 			Weather weather) {
 		super(id);
-		if (maxSpeed <= 0 || contLimit < 0 || length <= 0 || srcJunc == null || destJunc == null || weather == null)
-			throw new IllegalArgumentException("Constructor Road no válido");
+		if (maxSpeed <= 0)
+			throw new IllegalArgumentException("Max Speed should be greater than 0 in road: " + id);
+		if (contLimit < 0)
+			throw new IllegalArgumentException("Contamination limit should be greater than 0 in road: " + id);
+		if (length <= 0)
+			throw new IllegalArgumentException("Length should be greater than 0 in road: " + id);
+		if (srcJunc == null)
+			throw new IllegalArgumentException("Source Junction can't be empty in  road: " + id);
+		if (destJunc == null)
+			throw new IllegalArgumentException("Destination Junction can't be empty in road: " + id);
+		if (weather == null)
+			throw new IllegalArgumentException("Weather can't be empty in road: " + id);
 		this.srcJunc = srcJunc;
 		this.destJunc = destJunc;
 		this.maxSpeed = maxSpeed;
@@ -41,25 +51,25 @@ public abstract class Road extends SimulatedObject {
 		if (v.getSpeed() == 0 && v.getLocation() == 0)
 			vehicles.add(v);
 		else
-			throw new IllegalArgumentException("Invalid Vehicle");
+			throw new IllegalArgumentException("Invalid Vehicle " + v.getId() + " to enter road " + this._id);
 	}
 
 	public void exit(Vehicle v) {
 		vehicles.remove(v);
 	}
 
-	void setWeather(Weather w) {
+	void setWeather(Weather w) throws NullPointerException {
 		if (w != null)
 			weather = w;
 		else
-			throw new NullPointerException("Invalid weather");
+			throw new NullPointerException("Invalid weather for road " + this.getId());
 	}
 
-	void addContamination(int c) {
+	void addContamination(int c) throws IllegalArgumentException {
 		if (c >= 0)
 			conTotal += c;
 		else
-			throw new IllegalArgumentException("contamination in road must be positive");
+			throw new IllegalArgumentException("Contamination in road must be positive. Road: " + this.getId());
 	}
 
 	abstract void reduceTotalContamination();
@@ -127,7 +137,7 @@ public abstract class Road extends SimulatedObject {
 
 	protected void setTotalCO2(int c) throws IllegalArgumentException {
 		if (c < 0)
-			throw new IllegalArgumentException("Negative total contamination in Road");
+			throw new IllegalArgumentException("Negative total contamination in road " + this.getId());
 		conTotal = c;
 	}
 
