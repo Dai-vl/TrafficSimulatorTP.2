@@ -3,10 +3,12 @@ package simulator.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.io.IOException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -26,7 +28,11 @@ public class MainWindow extends JFrame {
 		super("Traffic Simulator");
 		control = c;
 		initGUI();
-
+		try {
+			c.loadEventsGui();
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Error in file", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	private void initGUI() {

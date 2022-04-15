@@ -162,7 +162,8 @@ public class Main {
 		InputStream in;
 		if (_inFile != null) {
 			in = new FileInputStream(new File(_inFile));
-			control.loadEvents(in);
+			control.saveInFile(in);
+			// control.loadEvents(in);
 		}
 
 		SwingUtilities.invokeLater(new Runnable() {

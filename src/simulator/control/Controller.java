@@ -20,6 +20,8 @@ public class Controller {
 
 	private Factory<Event> ef;
 
+	private InputStream in;
+
 	public Controller(TrafficSimulator sim, Factory<Event> eventsFactory) {
 		if (sim.equals(null))
 			throw new IllegalArgumentException("Traffic Simulator with null value in controller");
@@ -48,10 +50,19 @@ public class Controller {
 				ts.addEvent(ef.createInstance(e));
 			}
 
-			in.close();
+			// in.close();
 		} catch (RuntimeException e) {
 			throw new IllegalArgumentException("Error in the in JSON File: " + e.getMessage());
 		}
+	}
+
+	public void saveInFile(InputStream in) {
+		this.in = in;
+	}
+
+	public void loadEventsGui() throws IOException {
+		if (in != null)
+			loadEvents(in);
 	}
 
 	public void run(int n, OutputStream out) {

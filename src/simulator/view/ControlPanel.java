@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 
 	private Controller control;
 	private boolean _stopped = false;
-	private JButton fileChooser, contVehicle, changeRoadWeather, runButton, stopButton;
+	private JButton fileChooser, contVehicle, changeRoadWeather, runButton, stopButton, resetButton;
 	private JLabel ticksLabel;
 	private JSpinner ticksSpinner;
 
@@ -141,6 +142,19 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 
 		});
 
+		resetButton = new JButton();
+		resetButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					control.loadEventsGui();
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog((Frame) SwingUtilities.getWindowAncestor(ControlPanel.this),
+							e1.getMessage(), "Error in file", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+
 		setAppereance();
 	}
 
@@ -169,6 +183,10 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		stopButton.setContentAreaFilled(false);
 		stopButton.setBorder(BorderFactory.createEtchedBorder(1));
 		stopButton.setIcon(new ImageIcon("resources/icons/stop.png"));
+
+		resetButton.setContentAreaFilled(false);
+		resetButton.setBorder(BorderFactory.createEtchedBorder(1));
+		resetButton.setIcon(new ImageIcon("resources/icons/restart.png"));
 	}
 
 	private void addComponentsToContainer() {
@@ -180,6 +198,7 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 		left.add(changeRoadWeather);
 		left.add(runButton);
 		left.add(stopButton);
+		left.add(resetButton);
 		left.add(ticksLabel);
 		left.add(ticksSpinner);
 
