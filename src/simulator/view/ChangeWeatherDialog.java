@@ -75,8 +75,9 @@ public class ChangeWeatherDialog extends JDialog implements TrafficSimObserver {
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
 
-		JButton okButton = new JButton("  OK  "); // TODO
+		JButton okButton = new JButton("OK");
 		JButton cancelButton = new JButton("Cancel");
+		okButton.setPreferredSize(cancelButton.getPreferredSize());
 
 		cancelButton.addActionListener(new ActionListener() {
 			@Override

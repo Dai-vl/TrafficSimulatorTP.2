@@ -163,12 +163,10 @@ public class MapByRoadComponent extends JComponent implements TrafficSimObserver
 	private void updatePrefferedSize() {
 		int maxW = 200;
 		int maxH = 200;
-		for (Junction j : _map.getJunctions()) {
-			maxW = Math.max(maxW, j.getX());
-			maxH = Math.max(maxH, j.getY());
+		for (int i = 0; i < _map.getRoads().size(); ++i) {
+			maxH += 40;
 		}
-		maxW += 20;
-		maxH += 20;
+
 		if (maxW > getWidth() || maxH > getHeight()) {
 			setPreferredSize(new Dimension(maxW, maxH));
 			setSize(new Dimension(maxW, maxH));

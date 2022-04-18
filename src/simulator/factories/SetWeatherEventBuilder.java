@@ -30,7 +30,7 @@ public class SetWeatherEventBuilder extends Builder<Event> {
 				w.add(new Pair<String, Weather>(aux.getString("road"), Weather.valueOf(aux.getString("weather"))));
 			} catch (Exception e) {
 				throw new IllegalArgumentException("In the set weather event weather is not valid");
-			} // TODO he cambiado esto
+			}
 
 		}
 

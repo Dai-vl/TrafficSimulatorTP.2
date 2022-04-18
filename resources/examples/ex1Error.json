@@ -117,6 +117,123 @@
                          { "vehicle" : "v2", "class": 2 }, 
                        ]
       }
-    }  
+    }, 
+    {
+     "type" : "new_junction",
+     "data" : {
+     	 "time" : 1,
+         "id"   : "j5",
+      	 "coor" : [300,300],
+      	 "ls_strategy" : { "type" : "round_robin_lss", "data" : {"timeslot" : 5} },
+      	 "dq_strategy" : { "type" : "move_first_dqs",  "data" : {} }
+   	 }
+   },	
+   {
+     "type" : "new_junction",
+     "data" : {
+     	 "time" : 1,
+         "id"   : "j6",
+      	 "coor" : [300,400],
+      	 "ls_strategy" : { "type" : "round_robin_lss", "data" : {"timeslot" : 5} },
+      	 "dq_strategy" : { "type" : "move_first_dqs",  "data" : {} }
+   	 }
+   },	
+   {
+     "type" : "new_junction",
+     "data" : {
+     	 "time" : 1,
+         "id"   : "j7",
+      	 "coor" : [400,400],
+      	 "ls_strategy" : { "type" : "round_robin_lss", "data" : {"timeslot" : 5} },
+      	 "dq_strategy" : { "type" : "move_first_dqs",  "data" : {} }
+   	 }
+   },	
+   {
+     "type" : "new_junction",
+     "data" : {
+     	 "time" : 1,
+         "id"   : "j8",
+      	 "coor" : [500,400],
+      	 "ls_strategy" : { "type" : "round_robin_lss", "data" : {"timeslot" : 5} },
+      	 "dq_strategy" : { "type" : "move_first_dqs",  "data" : {} }
+   	 }
+   },
+   {
+	  "type" : "new_city_road",
+  	  "data" : {
+    	  "time"     : 1,
+    	   "id"       : "r4",
+           "src"      : "j5",
+           "dest"     : "j7",
+           "length"   : 10000,
+           "co2limit" : 15000,
+           "maxspeed" : 120,
+           "weather"  : "SUNNY"
+   	  }
+   	},
+    {
+	  "type" : "new_city_road",
+  	  "data" : {
+    	  "time"     : 1,
+    	   "id"       : "r5",
+           "src"      : "j6",
+           "dest"     : "j7",
+           "length"   : 10000,
+           "co2limit" : 10000,
+           "maxspeed" : 120,
+           "weather"  : "SUNNY"
+   	  }
+   	},
+    {
+	  "type" : "new_inter_city_road",
+  	  "data" : {
+    	  "time"     : 1,
+    	   "id"       : "r6",
+           "src"      : "j7",
+           "dest"     : "j8",
+           "length"   : 5000,
+           "co2limit" : 500,
+           "maxspeed" : 120,
+           "weather"  : "SUNNY"
+   	  }
+   	},
+   	{
+	  "type" : "new_vehicle",
+  	  "data" : {
+          "time"      : 1,
+          "id"        : "v3",
+          "maxspeed"  : 100,
+          "class"     : 3,
+          "itinerary" : ["j5", "j7", "j8"]
+      }
+    },
+   	{
+	  "type" : "new_vehicle",
+  	  "data" : {
+          "time"      : 1,
+          "id"        : "v4",
+          "maxspeed"  : 50,
+          "class"     : 0,
+          "itinerary" : ["j6", "j7", "j8"]
+      }
+    },
+	{
+  	  "type" : "set_weather",
+      "data" : {
+          "time"     : 100,
+          "info"     : [ { "road" : "r4", "weather": "SUNNY" }, 
+                         { "road" : "r5", "weather": "STORM" }, 
+	                   ]
+  	  }
+    },
+    {
+      "type" : "set_cont_class",
+      "data" : {
+          "time"     : 50,
+          "info"     : [ { "vehicle" : "v3", "class": 5 }, 
+                         { "vehicle" : "v4", "class": 2 }, 
+                       ]
+      }
+    } 
    ]
 }

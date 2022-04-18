@@ -47,10 +47,9 @@ public class MainWindow extends JFrame {
 		JPanel mapsPanel = new JPanel();
 		mapsPanel.setLayout(new BoxLayout(mapsPanel, BoxLayout.Y_AXIS));
 		viewsPanel.add(mapsPanel);
-		// TODO añadir el otro mapa
 
-		// tables
-		JPanel eventsView = createViewPanel(new JTable(new EventsTableModel(control)), "Events");
+		JTable t = new JTable(new EventsTableModel(control));
+		JPanel eventsView = createViewPanel(t, "Events");
 		eventsView.setPreferredSize(new Dimension(500, 200));
 		tablesPanel.add(eventsView);
 

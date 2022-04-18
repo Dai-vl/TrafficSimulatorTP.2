@@ -29,7 +29,7 @@ public class SetContClassEventBuilder extends Builder<Event> {
 				w.add(new Pair<String, Integer>(aux.getString("vehicle"), aux.getInt("class")));
 			} catch (Exception e) {
 				throw new IllegalArgumentException("In the set contamination event class is not valid");
-			} // TODO he cambiado esto
+			}
 		}
 
 		return new SetContClassEvent(time, w);
