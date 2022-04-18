@@ -67,8 +67,9 @@ public class Junction extends SimulatedObject {
 	}
 
 	public Road roadTo(Junction j) {
-		if (outgoingRoad.get(j) == null)
-			throw new IllegalArgumentException("There is no outgoing road in junction " + j.getId());
+		if (outgoingRoad.get(j) == null) {
+			throw new IllegalArgumentException("There is no outgoing road in junction " + this.getId());
+		}
 		return outgoingRoad.get(j);
 	}
 
