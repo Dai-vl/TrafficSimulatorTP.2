@@ -58,6 +58,7 @@ public class ChangeCO2ClassDialog extends JDialog implements TrafficSimObserver 
 		JLabel co2Label = new JLabel("CO2 Class:");
 		JLabel ticksLabel = new JLabel("Ticks:");
 
+		vehicles = new JComboBox<String>();
 		vehicles.setPreferredSize(new Dimension(60, 20));
 
 		JSpinner co2Spinner = new JSpinner(new SpinnerNumberModel(0, 0, 10, 1));
@@ -65,6 +66,7 @@ public class ChangeCO2ClassDialog extends JDialog implements TrafficSimObserver 
 
 		JSpinner ticksSpinner = new JSpinner();
 		ticksSpinner.setPreferredSize(new Dimension(60, 20));
+		ticksSpinner.setModel(new SpinnerNumberModel(1, 0, Integer.MAX_VALUE, 1));
 
 		eventPanel.add(vehicleLabel);
 		eventPanel.add(vehicles);
@@ -159,7 +161,7 @@ public class ChangeCO2ClassDialog extends JDialog implements TrafficSimObserver 
 	}
 
 	private void updateModel(String[] v) {
-		vehicles = new JComboBox<String>();
+
 		vehicles.setModel(new DefaultComboBoxModel<String>(v));
 	}
 }
