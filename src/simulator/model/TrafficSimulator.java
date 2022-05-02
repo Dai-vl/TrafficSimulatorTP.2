@@ -64,16 +64,16 @@ public class TrafficSimulator implements Observable<TrafficSimObserver> {
 				r.advance(time);
 			}
 
-			for (TrafficSimObserver t : observers) {
-				t.onAdvanceEnd(roads, events, time);
-			}
-
 		} catch (Exception e) {
 			for (TrafficSimObserver t : observers) {
 				t.onError(e.getMessage());
 			}
-			e.printStackTrace();
 			throw e;
+		} finally {
+			for (TrafficSimObserver t : observers) {
+				t.onAdvanceEnd(roads, events, time);
+			}
+
 		}
 	}
 

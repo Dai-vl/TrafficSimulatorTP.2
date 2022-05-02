@@ -26,8 +26,8 @@ public class NewVehicleEvent extends Event {
 		}
 
 		Vehicle v = new Vehicle(id, maxSpeed, contClass, aux);
-		v.moveToNextRoad();
 		map.addVehicle(v);
+		v.moveToNextRoad();
 	}
 
 	@Override

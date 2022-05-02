@@ -22,9 +22,9 @@ public class StatusBar extends JPanel implements TrafficSimObserver {
 
 	StatusBar(Controller c) {
 		control = c;
-		control.addObserver(this);
 		time = 0;
 		initGUI();
+		control.addObserver(this);
 	}
 
 	private void initGUI() {

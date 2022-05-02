@@ -38,8 +38,8 @@ public class ChangeWeatherDialog extends JDialog implements TrafficSimObserver {
 		super(p, "Change CO2 Class", true);
 		this.control = control;
 		_time = 0;
-		control.addObserver(this);
 		initGUI();
+		control.addObserver(this);
 	}
 
 	private void initGUI() {

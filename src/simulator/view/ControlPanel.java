@@ -37,8 +37,8 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 
 	ControlPanel(Controller c) {
 		control = c;
-		control.addObserver(this);
 		initGUI();
+		control.addObserver(this);
 	}
 
 	private void initGUI() {
@@ -191,10 +191,8 @@ public class ControlPanel extends JPanel implements TrafficSimObserver {
 			try {
 				control.run(1);
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog((Frame) SwingUtilities.getWindowAncestor(ControlPanel.this),
-						"An error occurred while running, stopping the simulation", "Error",
-						JOptionPane.WARNING_MESSAGE);
 				_stopped = true;
+				enableToolBar(true);
 				return;
 			}
 
