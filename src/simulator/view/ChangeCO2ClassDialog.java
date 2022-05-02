@@ -39,6 +39,7 @@ public class ChangeCO2ClassDialog extends JDialog implements TrafficSimObserver 
 		_time = 0;
 		initGUI();
 		control.addObserver(this);
+		this.setVisible(true);
 	}
 
 	private void initGUI() {
@@ -113,7 +114,6 @@ public class ChangeCO2ClassDialog extends JDialog implements TrafficSimObserver 
 		this.setResizable(false);
 		this.pack();
 		this.setLocation(MainWindow.ancho / 2 - this.getWidth() / 2, MainWindow.alto / 2 - this.getHeight() / 2);
-		this.setVisible(true);
 	}
 
 	@Override
